@@ -62,7 +62,7 @@ export class CloudflaredTunnelPlatform implements DynamicPlatformPlugin {
     (async () => {
       try {
         await this.verifyConfig();
-        this.debugLog('Config OK');
+        await this.debugLog('Config OK');
       } catch (e: any) {
         this.errorLog(`Verify Config, Error Message: ${e.message}, Submit Bugs Here: https://bit.ly/homebridge-cloudflared-tunnel-bug-report`);
         this.debugErrorLog(`Verify Config, Error: ${e}`);
@@ -108,11 +108,17 @@ export class CloudflaredTunnelPlatform implements DynamicPlatformPlugin {
    * Verify the config passed to the plugin is valid
    */
   async verifyConfig() {
-    if (!this.config.url && (!this.config.protocol && !this.config.hostname && !this.config.port)) {
+    if (!this.config.url && (!this.config.protocol && !this.config.hostname && !this.config.port) && (!this.config.domain && !this.config.token)) {
       throw new Error('Missing required config: url or {protocol}://{hostname}:{port}, please check your config.json');
     }
     if (this.config.url && this.config.hostname) {
       throw new Error('Cannot have both url and hostname in config. Please remove one.');
+    }
+    if (this.config.domain && !this.config.token) {
+      throw new Error('Missing required config: token, please check your config.json');
+    }
+    if (this.config.token && !this.config.domain) {
+      this.warnLog('Missing config: domain, this is is needed to display in the logs which domain is being tunneled, please check your config.json');
     }
     if (!this.config.logging) {
       this.config.logging = 'standard';
