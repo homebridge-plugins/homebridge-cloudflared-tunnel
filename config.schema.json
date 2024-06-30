@@ -15,11 +15,29 @@
         "default": "CloudflaredTunnel",
         "required": true
       },
+      "domain": {
+        "type": "string",
+        "title": "Domain",
+        "description": "The domain of the self specified tunnel.",
+        "required": false
+      },
+      "token": {
+        "type": "string",
+        "title": "Token",
+        "description": "The token to use for the self specified tunnel.",
+        "required": false,
+        "condition": {
+          "functionBody": "return (!model.url || (!model.protocol && !model.hostname && !model.port));"
+        }
+      },
       "acceptCloudflareNotice": {
         "type": "boolean",
         "title": "Auto Start Tunnel Install",
         "required": true,
-        "description": "Automatically start the Cloudflared Tunnel install process."
+        "description": "Automatically start the Cloudflared Tunnel install process.",
+        "condition": {
+          "functionBody": "return (!model.token && !model.domain);"
+        }
       },
       "url": {
         "type": "string",
@@ -28,14 +46,16 @@
         "pattern": "^https?://",
         "required": false,
         "condition": {
-          "functionBody": "return (!model.port && !model.hostname && !model.protocol);"
+          "functionBody": "return ((!model.port && !model.hostname && !model.protocol) || (!model.domain && !model.token));"
         },
         "description": "The URL to tunnel to. If you are using a URL, you do not need to specify the protocol, hostname, or port.",
         "default": "",
         "format": "uri",
         "patternErrorMessage": "URL must start with http:// or https://",
         "validationMessage": "URL must start with http:// or https://",
-        "validationKeywords": ["pattern"],
+        "validationKeywords": [
+          "pattern"
+        ],
         "validation": {
           "pattern": "^https?://"
         }
@@ -48,16 +68,20 @@
         "oneOf": [
           {
             "title": "HTTP",
-            "enum": ["http"]
+            "enum": [
+              "http"
+            ]
           },
           {
             "title": "HTTPS",
-            "enum": ["https"]
+            "enum": [
+              "https"
+            ]
           }
         ],
         "description": "The protocol to use for the tunnel. If you are using a URL, you do not need to specify the protocol, hostname, or port.",
         "condition": {
-          "functionBody": "return (!model.url);"
+          "functionBody": "return (!model.url || (!model.domain && !model.token));"
         }
       },
       "hostname": {
@@ -73,9 +97,11 @@
         "validationMessage": "Hostname must be specified if not using a URL",
         "pattern": "^(?!\\s*$).+",
         "patternErrorMessage": "Hostname must be specified if not using a URL",
-        "validationKeywords": ["pattern"],
+        "validationKeywords": [
+          "pattern"
+        ],
         "condition": {
-          "functionBody": "return (!model.url);"
+          "functionBody": "return (!model.url || (!model.domain && !model.token));"
         }
       },
       "port": {
@@ -87,27 +113,30 @@
         "minimum": 1,
         "maximum": 65535,
         "validationMessage": "Port must be between 1 and 65535",
-        "validationKeywords": ["minimum", "maximum"],
+        "validationKeywords": [
+          "minimum",
+          "maximum"
+        ],
         "validation": {
           "minimum": 1,
           "maximum": 65535,
-          "functionBody": "return (!model.url);"
+          "functionBody": "return (!model.url || (!model.domain && !model.token));"
         },
         "condition": {
-          "functionBody": "return (!model.url);"
+          "functionBody": "return (!model.url || (!model.domain && !model.token));"
         }
       },
       "verifyTLS": {
         "type": "boolean",
         "title": "Verify TLS",
         "required": false,
-        "default": true,
+        "default": false,
         "description": "Verify the TLS certificate of the origin server.",
         "condition": {
-          "functionBody": "return (!model.url || (!model.protocol && !model.hostname && !model.port));"
+          "functionBody": "return ((!model.url || (!model.protocol && !model.hostname && !model.port)) || (!model.domain && !model.token));"
         },
         "validation": {
-          "functionBody": "return (!model.url || (!model.protocol && !model.hostname && !model.port));"
+          "functionBody": "return ((!model.url || (!model.protocol && !model.hostname && !model.port)) || (!model.domain && !model.token));"
         }
       },
       "logging": {
@@ -118,28 +147,51 @@
         "oneOf": [
           {
             "title": "Default Logging",
-            "enum": [""]
+            "enum": [
+              ""
+            ]
           },
           {
             "title": "Standard Logging",
-            "enum": ["standard"]
+            "enum": [
+              "standard"
+            ]
           },
           {
             "title": "No Logging",
-            "enum": ["none"]
+            "enum": [
+              "none"
+            ]
           },
           {
             "title": "Debug Logging",
-            "enum": ["debug"]
+            "enum": [
+              "debug"
+            ]
           }
         ]
       }
     },
-      "dependentRequired": {
-        "protocol": ["hostname", "port"],
-        "hostname": ["protocol", "port"],
-        "port": ["protocol", "hostname"]
-      }
+    "dependentRequired": {
+      "domain": [
+        "token"
+      ],
+      "token": [
+        "domain"
+      ],
+      "protocol": [
+        "hostname",
+        "port"
+      ],
+      "hostname": [
+        "protocol",
+        "port"
+      ],
+      "port": [
+        "protocol",
+        "hostname"
+      ]
+    }
   },
   "layout": [
     {
@@ -148,6 +200,8 @@
       "expandable": true,
       "expanded": false,
       "items": [
+        "domain",
+        "token",
         "acceptCloudflareNotice",
         "url",
         "protocol",
