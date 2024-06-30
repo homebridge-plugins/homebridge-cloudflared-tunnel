@@ -23,7 +23,7 @@
       },
       "token": {
         "type": "string",
-        "title": "token",
+        "title": "Token",
         "description": "The token to use for the self specified tunnel.",
         "required": false,
         "condition": {
@@ -46,7 +46,7 @@
         "pattern": "^https?://",
         "required": false,
         "condition": {
-          "functionBody": "return (!model.port && !model.hostname && !model.protocol);"
+          "functionBody": "return ((!model.port && !model.hostname && !model.protocol) || (!model.domain && !model.token));"
         },
         "description": "The URL to tunnel to. If you are using a URL, you do not need to specify the protocol, hostname, or port.",
         "default": "",
@@ -81,7 +81,7 @@
         ],
         "description": "The protocol to use for the tunnel. If you are using a URL, you do not need to specify the protocol, hostname, or port.",
         "condition": {
-          "functionBody": "return (!model.url);"
+          "functionBody": "return (!model.url || (!model.domain && !model.token));"
         }
       },
       "hostname": {
@@ -101,7 +101,7 @@
           "pattern"
         ],
         "condition": {
-          "functionBody": "return (!model.url);"
+          "functionBody": "return (!model.url || (!model.domain && !model.token));"
         }
       },
       "port": {
@@ -120,10 +120,10 @@
         "validation": {
           "minimum": 1,
           "maximum": 65535,
-          "functionBody": "return (!model.url);"
+          "functionBody": "return (!model.url || (!model.domain && !model.token));"
         },
         "condition": {
-          "functionBody": "return (!model.url);"
+          "functionBody": "return (!model.url || (!model.domain && !model.token));"
         }
       },
       "verifyTLS": {
@@ -133,10 +133,10 @@
         "default": true,
         "description": "Verify the TLS certificate of the origin server.",
         "condition": {
-          "functionBody": "return (!model.url || (!model.protocol && !model.hostname && !model.port));"
+          "functionBody": "return (!model.url || (!model.protocol && !model.hostname && !model.port) || (!model.domain && !model.token));"
         },
         "validation": {
-          "functionBody": "return (!model.url || (!model.protocol && !model.hostname && !model.port));"
+          "functionBody": "return (!model.url || (!model.protocol && !model.hostname && !model.port) || (!model.domain && !model.token));"
         }
       },
       "logging": {
@@ -173,6 +173,12 @@
       }
     },
     "dependentRequired": {
+      "domain": [
+        "token"
+      ],
+      "token": [
+        "domain"
+      ],
       "protocol": [
         "hostname",
         "port"
