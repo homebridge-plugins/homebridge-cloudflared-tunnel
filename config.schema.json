@@ -130,13 +130,13 @@
         "type": "boolean",
         "title": "Verify TLS",
         "required": false,
-        "default": true,
+        "default": false,
         "description": "Verify the TLS certificate of the origin server.",
         "condition": {
-          "functionBody": "return (!model.url || (!model.protocol && !model.hostname && !model.port) || (!model.domain && !model.token));"
+          "functionBody": "return ((!model.url || (!model.protocol && !model.hostname && !model.port)) || (!model.domain && !model.token));"
         },
         "validation": {
-          "functionBody": "return (!model.url || (!model.protocol && !model.hostname && !model.port) || (!model.domain && !model.token));"
+          "functionBody": "return ((!model.url || (!model.protocol && !model.hostname && !model.port)) || (!model.domain && !model.token));"
         }
       },
       "logging": {
