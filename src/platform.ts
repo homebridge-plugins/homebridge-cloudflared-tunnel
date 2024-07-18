@@ -4,7 +4,7 @@
  */
 import { startTunnel } from 'untun';
 import { readFileSync } from 'fs';
-import { CloudflaredTunnel } from 'node-cloudflared-tunnel';
+import { CloudflaredTunnel } from './cloudflared-tunnel.js';
 
 import type { TunnelOptions } from 'untun';
 import type { CloudflaredTunnelPlatformConfig } from './settings.js';
@@ -79,10 +79,7 @@ export class CloudflaredTunnelPlatform implements DynamicPlatformPlugin {
       // run the method to discover / register your devices as accessories
       try {
         if (this.config.domain) {
-          const tunnel = new CloudflaredTunnel();
-          tunnel.token = this.config.token;
-          await this.infoLog(`Starting Tunnel with Domain: ${this.config.domain}`);
-          tunnel.start();
+          await this.existingTunnel();
         } else {
           await this.createTunnel();
         }
@@ -128,6 +125,13 @@ export class CloudflaredTunnelPlatform implements DynamicPlatformPlugin {
     }
   }
 
+  async existingTunnel() {
+    const tunnel = new CloudflaredTunnel();
+    tunnel.token = this.config.token;
+    await this.infoLog(`Starting Tunnel with Domain: ${this.config.domain}`);
+    tunnel.start();
+  }
+
   async createTunnel() {
     await this.debugLog(JSON.stringify(this.config));
     //The local server URL to tunnel.
@@ -168,17 +172,17 @@ export class CloudflaredTunnelPlatform implements DynamicPlatformPlugin {
     this.platformLogging = this.config.options?.logging ?? 'standard';
     if (this.config.options?.logging === 'debug' || this.config.options?.logging === 'standard' || this.config.options?.logging === 'none') {
       this.platformLogging = this.config.options.logging;
-      if (this.platformLogging?.includes('debug')) {
+      if (await this.loggingIsDebug()) {
         this.debugWarnLog(`Using Config Logging: ${this.platformLogging}`);
       }
     } else if (this.debugMode) {
       this.platformLogging = 'debugMode';
-      if (this.platformLogging?.includes('debug')) {
+      if (await this.loggingIsDebug()) {
         this.debugWarnLog(`Using ${this.platformLogging} Logging`);
       }
     } else {
       this.platformLogging = 'standard';
-      if (this.platformLogging?.includes('debug')) {
+      if (await this.loggingIsDebug()) {
         this.debugWarnLog(`Using ${this.platformLogging} Logging`);
       }
     }
@@ -216,7 +220,7 @@ export class CloudflaredTunnelPlatform implements DynamicPlatformPlugin {
 
   async debugSuccessLog(...log: any[]): Promise<void> {
     if (await this.enablingPlatformLogging()) {
-      if (this.platformLogging?.includes('debug')) {
+      if (await this.loggingIsDebug()) {
         this.log.success('[DEBUG]', String(...log));
       }
     }
@@ -230,7 +234,7 @@ export class CloudflaredTunnelPlatform implements DynamicPlatformPlugin {
 
   async debugWarnLog(...log: any[]): Promise<void> {
     if (await this.enablingPlatformLogging()) {
-      if (this.platformLogging?.includes('debug')) {
+      if (await this.loggingIsDebug()) {
         this.log.warn('[DEBUG]', String(...log));
       }
     }
@@ -244,7 +248,7 @@ export class CloudflaredTunnelPlatform implements DynamicPlatformPlugin {
 
   async debugErrorLog(...log: any[]): Promise<void> {
     if (await this.enablingPlatformLogging()) {
-      if (this.platformLogging?.includes('debug')) {
+      if (await this.loggingIsDebug()) {
         this.log.error('[DEBUG]', String(...log));
       }
     }
@@ -260,7 +264,11 @@ export class CloudflaredTunnelPlatform implements DynamicPlatformPlugin {
     }
   }
 
+  async loggingIsDebug(): Promise<boolean> {
+    return this.platformLogging === 'debugMode' || this.platformLogging === 'debug';
+  }
+
   async enablingPlatformLogging(): Promise<boolean> {
-    return this.platformLogging?.includes('debug') || this.platformLogging === 'standard';
+    return this.platformLogging === 'debugMode' || this.platformLogging === 'debug' || this.platformLogging === 'standard';
   }
 }
