@@ -2,11 +2,13 @@
  *
  * platform.ts: homebridge-cloudflared-tunnel.
  */
-import { API, DynamicPlatformPlugin, HAP, Logging, PlatformAccessory } from 'homebridge';
-import { startTunnel, TunnelOptions } from 'untun';
+import { startTunnel } from 'untun';
 import { readFileSync } from 'fs';
+import { CloudflaredTunnel } from './cloudflared-tunnel.js';
 
-import { CloudflaredTunnelPlatformConfig } from './settings.js';
+import type { TunnelOptions } from 'untun';
+import type { CloudflaredTunnelPlatformConfig } from './settings.js';
+import type { API, DynamicPlatformPlugin, HAP, Logging, PlatformAccessory } from 'homebridge';
 
 /**
  * HomebridgePlatform
@@ -41,6 +43,8 @@ export class CloudflaredTunnelPlatform implements DynamicPlatformPlugin {
     // Plugin options into our config variables.
     this.config = {
       platform: 'CloudflaredTunnel',
+      domain: config.domain as string,
+      token: config.token as string,
       name: config.name as string,
       url: config.url as string,
       port: config.port as number,
@@ -58,7 +62,7 @@ export class CloudflaredTunnelPlatform implements DynamicPlatformPlugin {
     (async () => {
       try {
         await this.verifyConfig();
-        this.debugLog('Config OK');
+        await this.debugLog('Config OK');
       } catch (e: any) {
         this.errorLog(`Verify Config, Error Message: ${e.message}, Submit Bugs Here: https://bit.ly/homebridge-cloudflared-tunnel-bug-report`);
         this.debugErrorLog(`Verify Config, Error: ${e}`);
@@ -74,7 +78,11 @@ export class CloudflaredTunnelPlatform implements DynamicPlatformPlugin {
       log.debug('Executed didFinishLaunching callback');
       // run the method to discover / register your devices as accessories
       try {
-        await this.createTunnel();
+        if (this.config.domain) {
+          await this.existingTunnel();
+        } else {
+          await this.createTunnel();
+        }
       } catch (e: any) {
         this.errorLog(`Failed to Start Tunnel, Error Message: ${JSON.stringify(e.message)}`);
         this.debugErrorLog(JSON.stringify(e));
@@ -97,11 +105,17 @@ export class CloudflaredTunnelPlatform implements DynamicPlatformPlugin {
    * Verify the config passed to the plugin is valid
    */
   async verifyConfig() {
-    if (!this.config.url && (!this.config.protocol && !this.config.hostname && !this.config.port)) {
+    if (!this.config.url && (!this.config.protocol && !this.config.hostname && !this.config.port) && (!this.config.domain && !this.config.token)) {
       throw new Error('Missing required config: url or {protocol}://{hostname}:{port}, please check your config.json');
     }
     if (this.config.url && this.config.hostname) {
       throw new Error('Cannot have both url and hostname in config. Please remove one.');
+    }
+    if (this.config.domain && !this.config.token) {
+      throw new Error('Missing required config: token, please check your config.json');
+    }
+    if (this.config.token && !this.config.domain) {
+      this.warnLog('Missing config: domain, this is is needed to display in the logs which domain is being tunneled, please check your config.json');
     }
     if (!this.config.logging) {
       this.config.logging = 'standard';
@@ -111,8 +125,15 @@ export class CloudflaredTunnelPlatform implements DynamicPlatformPlugin {
     }
   }
 
+  async existingTunnel() {
+    const tunnel = new CloudflaredTunnel();
+    tunnel.token = this.config.token;
+    await this.infoLog(`Starting Tunnel with Domain: ${this.config.domain}`);
+    tunnel.start();
+  }
+
   async createTunnel() {
-    this.debugLog(JSON.stringify(this.config));
+    await this.debugLog(JSON.stringify(this.config));
     //The local server URL to tunnel.
     const options: TunnelOptions = {
       url: this.config.url,
@@ -122,11 +143,11 @@ export class CloudflaredTunnelPlatform implements DynamicPlatformPlugin {
       verifyTLS: this.config.verifyTLS,
       acceptCloudflareNotice: this.config.acceptCloudflareNotice,
     };
-    this.debugWarnLog(`Starting Tunnel with Options: ${JSON.stringify(options)}`);
+    await this.debugWarnLog(`Starting Tunnel with Options: ${JSON.stringify(options)}`);
     const autoTunnel = await startTunnel(options);
     if (autoTunnel) {
       const tunnelURL = await autoTunnel.getURL();
-      this.infoLog(`Tunnel URL: ${JSON.stringify(tunnelURL)}`);
+      await this.infoLog(`Tunnel URL: ${JSON.stringify(tunnelURL)}`);
     }
   }
 
@@ -151,17 +172,17 @@ export class CloudflaredTunnelPlatform implements DynamicPlatformPlugin {
     this.platformLogging = this.config.options?.logging ?? 'standard';
     if (this.config.options?.logging === 'debug' || this.config.options?.logging === 'standard' || this.config.options?.logging === 'none') {
       this.platformLogging = this.config.options.logging;
-      if (this.platformLogging?.includes('debug')) {
+      if (await this.loggingIsDebug()) {
         this.debugWarnLog(`Using Config Logging: ${this.platformLogging}`);
       }
     } else if (this.debugMode) {
       this.platformLogging = 'debugMode';
-      if (this.platformLogging?.includes('debug')) {
+      if (await this.loggingIsDebug()) {
         this.debugWarnLog(`Using ${this.platformLogging} Logging`);
       }
     } else {
       this.platformLogging = 'standard';
-      if (this.platformLogging?.includes('debug')) {
+      if (await this.loggingIsDebug()) {
         this.debugWarnLog(`Using ${this.platformLogging} Logging`);
       }
     }
@@ -185,42 +206,56 @@ export class CloudflaredTunnelPlatform implements DynamicPlatformPlugin {
    * If device level logging is turned on, log to log.warn
    * Otherwise send debug logs to log.debug
    */
-  infoLog(...log: any[]): void {
-    if (this.enablingPlatfromLogging()) {
+  async infoLog(...log: any[]): Promise<void> {
+    if (await this.enablingPlatformLogging()) {
       this.log.info(String(...log));
     }
   }
 
-  warnLog(...log: any[]): void {
-    if (this.enablingPlatfromLogging()) {
+  async successLog(...log: any[]): Promise<void> {
+    if (await this.enablingPlatformLogging()) {
+      this.log.success(String(...log));
+    }
+  }
+
+  async debugSuccessLog(...log: any[]): Promise<void> {
+    if (await this.enablingPlatformLogging()) {
+      if (await this.loggingIsDebug()) {
+        this.log.success('[DEBUG]', String(...log));
+      }
+    }
+  }
+
+  async warnLog(...log: any[]): Promise<void> {
+    if (await this.enablingPlatformLogging()) {
       this.log.warn(String(...log));
     }
   }
 
-  debugWarnLog(...log: any[]): void {
-    if (this.enablingPlatfromLogging()) {
-      if (this.platformLogging?.includes('debug')) {
+  async debugWarnLog(...log: any[]): Promise<void> {
+    if (await this.enablingPlatformLogging()) {
+      if (await this.loggingIsDebug()) {
         this.log.warn('[DEBUG]', String(...log));
       }
     }
   }
 
-  errorLog(...log: any[]): void {
-    if (this.enablingPlatfromLogging()) {
+  async errorLog(...log: any[]): Promise<void> {
+    if (await this.enablingPlatformLogging()) {
       this.log.error(String(...log));
     }
   }
 
-  debugErrorLog(...log: any[]): void {
-    if (this.enablingPlatfromLogging()) {
-      if (this.platformLogging?.includes('debug')) {
+  async debugErrorLog(...log: any[]): Promise<void> {
+    if (await this.enablingPlatformLogging()) {
+      if (await this.loggingIsDebug()) {
         this.log.error('[DEBUG]', String(...log));
       }
     }
   }
 
-  debugLog(...log: any[]): void {
-    if (this.enablingPlatfromLogging()) {
+  async debugLog(...log: any[]): Promise<void> {
+    if (await this.enablingPlatformLogging()) {
       if (this.platformLogging === 'debugMode') {
         this.log.debug(String(...log));
       } else if (this.platformLogging === 'debug') {
@@ -229,7 +264,11 @@ export class CloudflaredTunnelPlatform implements DynamicPlatformPlugin {
     }
   }
 
-  enablingPlatfromLogging(): boolean {
-    return this.platformLogging?.includes('debug') || this.platformLogging === 'standard';
+  async loggingIsDebug(): Promise<boolean> {
+    return this.platformLogging === 'debugMode' || this.platformLogging === 'debug';
+  }
+
+  async enablingPlatformLogging(): Promise<boolean> {
+    return this.platformLogging === 'debugMode' || this.platformLogging === 'debug' || this.platformLogging === 'standard';
   }
 }

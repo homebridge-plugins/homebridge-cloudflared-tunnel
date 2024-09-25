@@ -2,8 +2,8 @@
  *
  * settings.ts: homebridge-cloudflared-tunnel.
  */
-import { PlatformConfig } from 'homebridge';
-import { TunnelOptions } from 'untun';
+import type { TunnelOptions } from 'untun';
+import type { PlatformConfig } from 'homebridge';
 /**
  * This is the name of the platform that users will use to register the plugin in the Homebridge config.json
  */
@@ -16,6 +16,8 @@ export const PLUGIN_NAME = 'homebridge-cloudflared-tunnel';
 
 //Config
 export interface CloudflaredTunnelPlatformConfig extends PlatformConfig {
+  domain?: string;
+  token?: string;
   url?: TunnelOptions['url'];
   port?: TunnelOptions['port'];
   hostname?: TunnelOptions['hostname'];
