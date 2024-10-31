@@ -15,7 +15,7 @@ jobs:
   publish:
     needs: build_and_test
 
-    if: ${{ github.repository == 'donavanbecker/homebridge-cloudflared-tunnel' }}
+    if: ${{ github.repository == 'homebridge-plugins/homebridge-cloudflared-tunnel' }}
 
     uses: donavanbecker/.github/.github/workflows/npm-publish.yml@latest
     secrets:
@@ -24,10 +24,11 @@ jobs:
   github-releases-to-discord:
     needs: publish
 
-    if: ${{ github.repository == 'donavanbecker/homebridge-cloudflared-tunnel' }}
+    if: ${{ github.repository == 'homebridge-plugins/homebridge-cloudflared-tunnel' }}
 
     uses: donavanbecker/.github/.github/workflows/discord-webhooks.yml@latest
     with:
-      footer_title: "Cloudflared Tunnel"
+      message_title: "Cloudflared Tunnel"
+      message_url: "https://github.com/homebridge-plugins/homebridge-cloudflared-tunnel/releases/tag/v${{ github.event.release.tag_name }}"
     secrets:
       DISCORD_WEBHOOK_URL_LATEST: ${{ secrets.DISCORD_WEBHOOK_URL_LATEST }}

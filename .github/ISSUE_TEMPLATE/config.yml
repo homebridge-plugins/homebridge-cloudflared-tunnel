@@ -4,5 +4,5 @@ contact_links:
     url: https://discord.gg/8fpZA4S
     about: Please ask and answer questions here.
   - name: homebridge-cloudflared-tunnel - Pull Requests
-    url: https://github.com/donavanbecker/homebridge-cloudflared-tunnel/pulls
+    url: https://github.com/homebridge-plugins/homebridge-cloudflared-tunnel/pulls
     about: Please report security vulnerabilities here.
