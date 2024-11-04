@@ -1,6 +1,6 @@
 <span align="center">
 
-<a href="https://github.com/homebridge/verified/blob/master/verified-plugins.json"><img alt="homebridge-verified" src="https://raw.githubusercontent.com/donavanbecker/homebridge-cloudflared-tunnel/latest/branding/Homebridge_x_CloudflaredTunnel.svg?sanitize=true" width="350px"></a>
+<a href="https://github.com/homebridge/verified/blob/master/verified-plugins.json"><img alt="homebridge-verified" src="https://raw.githubusercontent.com/homebridge-plugins/homebridge-cloudflared-tunnel/latest/branding/Homebridge_x_CloudflaredTunnel.svg?sanitize=true" width="350px"></a>
 
 # Homebridge Cloudflared Tunnel
 
