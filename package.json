@@ -2,7 +2,7 @@
   "name": "homebridge-cloudflared-tunnel",
   "displayName": "Cloudflared Tunnel",
   "type": "module",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "The Cloudflared Tunnel plugin allows you to run a Cloudflare-Tunnel for exposing your homebridge instance for remote access.",
   "author": {
     "name": "donavanbecker",
@@ -68,7 +68,7 @@
     "@types/debug": "^4.1.12",
     "@types/fs-extra": "^11.0.4",
     "@types/mdast": "^4.0.4",
-    "@types/node": "^22.8.7",
+    "@types/node": "^22.9.0",
     "@types/semver": "^7.5.8",
     "@types/source-map-support": "^0.5.10",
     "@vitest/coverage-v8": "^2.1.4",

@@ -29,3 +29,11 @@ export interface CloudflaredTunnelPlatformConfig extends PlatformConfig {
   pushRate?: number
   logging?: string
 }
+
+export interface devicesConfig {
+  refreshRate: number
+  updateRate: number
+  pushRate: number
+  logging: string
+  firmware: string
+}
