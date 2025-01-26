@@ -1,6 +1,6 @@
 /* Copyright(C) 2023-2024, donavanbecker (https://github.com/donavanbecker). All rights reserved.
  *
- * cloudflared-tunnel.ts: homebridge-cloudflared-tunnel.
+ * cloudflared-tunnel.ts: @homebridge-plugins/homebridge-cloudflared-tunnel.
  */
 import * as childProcess from 'node:child_process'
 import * as process from 'node:process'
@@ -135,6 +135,10 @@ class CloudflaredTunnel {
       this.childProcess.kill('SIGINT')
       this.childProcess = null
     }
+  }
+
+  setChildProcess(childProcess: childProcess.ChildProcess | null) {
+    this.childProcess = childProcess
   }
 }
 

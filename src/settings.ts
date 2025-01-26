@@ -1,6 +1,6 @@
 /* Copyright(C) 2023-2024, donavanbecker (https://github.com/donavanbecker). All rights reserved.
  *
- * settings.ts: homebridge-cloudflared-tunnel.
+ * settings.ts: @homebridge-plugins/homebridge-cloudflared-tunnel.
  */
 import type { PlatformConfig } from 'homebridge'
 import type { TunnelOptions } from 'untun'
@@ -12,7 +12,7 @@ export const PLATFORM_NAME = 'CloudflaredTunnel'
 /**
  * This must match the name of your plugin as defined the package.json
  */
-export const PLUGIN_NAME = 'homebridge-cloudflared-tunnel'
+export const PLUGIN_NAME = '@homebridge-plugins/homebridge-cloudflared-tunnel'
 
 // Config
 export interface CloudflaredTunnelPlatformConfig extends PlatformConfig {

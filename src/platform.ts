@@ -1,6 +1,6 @@
 /* Copyright(C) 2023-2024, donavanbecker (https://github.com/donavanbecker). All rights reserved.
  *
- * platform.ts: homebridge-cloudflared-tunnel.
+ * platform.ts: @homebridge-plugins/homebridge-cloudflared-tunnel.
  */
 import type { API, DynamicPlatformPlugin, HAP, Logging, PlatformAccessory } from 'homebridge'
 import type { TunnelOptions } from 'untun'
