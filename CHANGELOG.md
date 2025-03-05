@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. This project uses [Semantic Versioning](https://semver.org/)
 
+## [2.0.3](https://github.com/homebridge-plugins/homebridge-cloudflared-tunnel/releases/tag/v2.0.3) (2025-03-04)
+
+# *No New Releases During Lent*
+
+### What's Changes
+- Housekeeping and updated dependencies.
+
+**Full Changelog**: https://github.com/homebridge-plugins/homebridge-cloudflared-tunnel/compare/v2.0.2...v2.0.3
+
 ## [2.0.2](https://github.com/homebridge-plugins/homebridge-cloudflared-tunnel/releases/tag/v2.0.2) (2025-01-25)
 
 ### What's Changes
