@@ -162,19 +162,44 @@ This is a Homebridge plugin that enables users to create Cloudflared tunnels for
 - GitHub releases with release notes
 - npm publishing to public registry
 
+### Beta Branching Strategy
+- **ALL pull requests must target a beta branch first**, not the main/latest branch
+- Beta branches follow the pattern `beta-X.Y.Z` where X.Y.Z is the target version
+- If no beta branch exists for the target version, create one based on the latest branch
+- Examples: `beta-2.0.4` (patch), `beta-2.1.0` (minor), `beta-3.0.0` (major)
+
+### Semantic Version Labels (Required)
+Before assigning any issue to Copilot, one of these labels **must** be applied:
+- **`patch`**: Bug fixes and small improvements (e.g., 2.0.3 → 2.0.4)
+- **`minor`**: New features and functionality (e.g., 2.0.3 → 2.1.0)  
+- **`major`**: Breaking changes (e.g., 2.0.3 → 3.0.0)
+
+These labels determine:
+1. Which beta branch to target (or create if needed)
+2. The version increment for the release
+3. The scope and impact of changes expected
+
 ### CI/CD Pipeline
 - GitHub Actions for build and test
 - Automated release drafting
 - Dependency security scanning
 - Multi-platform testing (Node 20, 22)
+- Beta releases trigger automatically on pushes to beta-* branches
 
 ## When Contributing
+
+### Prerequisites
+Before starting any work:
+1. **Ensure proper labels are applied**: One of `patch`, `minor`, or `major` must be set
+2. **Verify target beta branch exists**: Check for `beta-X.Y.Z` branch matching the label type
+3. **Create beta branch if needed**: Base it on `latest` branch for the target version
 
 ### Code Changes
 - Follow existing patterns in platform.ts
 - Update tests for new functionality
 - Ensure TypeScript strict compliance
 - Add JSDoc for public methods
+- **Always target beta branches first**, never directly to main/latest
 
 ### Configuration Changes
 - Update config.schema.json
@@ -189,6 +214,20 @@ This is a Homebridge plugin that enables users to create Cloudflared tunnels for
 - Verify security and maintenance status
 
 ## Common Tasks
+
+### Working with Beta Branches
+1. **Check for existing beta branch**: `git branch -r | grep beta-`
+2. **Create new beta branch if needed**:
+   ```bash
+   git checkout latest
+   git pull origin latest
+   git checkout -b beta-X.Y.Z
+   git push origin beta-X.Y.Z
+   ```
+3. **Target the correct beta branch** based on semantic version label:
+   - `patch` label → `beta-X.Y.(Z+1)` (e.g., 2.0.3 → beta-2.0.4)
+   - `minor` label → `beta-X.(Y+1).0` (e.g., 2.0.3 → beta-2.1.0)
+   - `major` label → `beta-(X+1).0.0` (e.g., 2.0.3 → beta-3.0.0)
 
 ### Adding New Tunnel Options
 1. Update `CloudflaredTunnelPlatformConfig` interface

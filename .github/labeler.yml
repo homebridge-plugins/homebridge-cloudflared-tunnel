@@ -36,3 +36,8 @@ latest:
 workflow:
 - changed-files:
   - any-glob-to-any-file: .github/**
+
+# Semantic versioning labels - these should be manually applied before assigning to Copilot
+# patch: Bug fixes and small improvements (2.0.3 -> 2.0.4)
+# minor: New features and functionality (2.0.3 -> 2.1.0)  
+# major: Breaking changes (2.0.3 -> 3.0.0)
