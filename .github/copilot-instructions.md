@@ -4,10 +4,73 @@
 
 This is a Homebridge plugin that enables users to create Cloudflared tunnels for exposing their Homebridge instance for remote access. The plugin integrates with Cloudflare's tunnel service to provide secure remote connectivity.
 
+## Matter and HomeKit Integration
+
+### Matter Implementation
+The plugin implements runtime platform selection with strict mode-specific publishing:
+- **HAP mode** (HomeKit Accessory Protocol): Base implementation via `CloudflaredTunnelPlatform` in `src/Platform.HAP.ts`.
+- **Matter mode**: Extended implementation via `CloudflaredTunnelMatterPlatform` in `src/Platform.Matter.ts`.
+
+Selection is performed by `createPlatformProxy()` in `src/utils.ts`, based on `enableMatter` and Homebridge Matter runtime availability.
+
+In Matter mode, the plugin publishes a Matter accessory endpoint for tunnel status and does not publish the HAP status accessory. If Matter initialization fails, the proxy falls back to HAP mode.
+
+### Matter Device Type Mapping
+The current implementation publishes tunnel status as:
+
+| Mode | Device/Service | Type | Cluster/Characteristic |
+|---|---|---|---|
+| HAP | Tunnel Status | `OccupancySensor` | `OccupancyDetected` |
+| Matter | Tunnel Status | `MotionSensor` | `occupancySensing.occupancy.occupied` |
+
+### Authoritative Matter References
+
+1. https://matter-js.github.io/docs/index.html
+2. https://github.com/homebridge-plugins/homebridge-matter: Official Homebridge Matter plugin repository with extensive documentation and examples
+  - For all Matter cluster, attribute, and device type specifications, use the official homebridge-matter wiki:
+    - [Introduction](https://github.com/homebridge-plugins/homebridge-matter/wiki/Introduction)
+    - [Core Concepts](https://github.com/homebridge-plugins/homebridge-matter/wiki/Core-Concepts)
+    - [Getting Started](https://github.com/homebridge-plugins/homebridge-matter/wiki/Getting-Started)
+    - [State Management](https://github.com/homebridge-plugins/homebridge-matter/wiki/State-Management)
+    - [Monitoring External Changes](https://github.com/homebridge-plugins/homebridge-matter/wiki/Monitoring-External-Changes)
+    - [Best Practices](https://github.com/homebridge-plugins/homebridge-matter/wiki/Best-Practices)
+    - [Advanced Patterns](https://github.com/homebridge-plugins/homebridge-matter/wiki/Advanced-Patterns)
+    - [API Reference](https://github.com/homebridge-plugins/homebridge-matter/wiki/API-Reference)
+    - [Matter Types](https://github.com/homebridge-plugins/homebridge-matter/wiki/Matter-Types)
+    - [Value Conversions](https://github.com/homebridge-plugins/homebridge-matter/wiki/Value-Conversions)
+
+  - **Device References:**
+    - [Lighting Devices (§4)](https://github.com/homebridge-plugins/homebridge-matter/wiki/Section-4-Lighting) — DimmableLight, OnOffLight
+    - [Switches (§6)](https://github.com/homebridge-plugins/homebridge-matter/wiki/Section-6-Switches) — OnOffSwitch
+    - [Sensors (§7)](https://github.com/homebridge-plugins/homebridge-matter/wiki/Section-7-Sensors) — OccupancySensor
+    - [Closure Devices (§8)](https://github.com/homebridge-plugins/homebridge-matter/wiki/Section-8-Closure) — WindowCovering
+
+## Changelog Format Requirements
+
+When generating a changelog release entry, always use this exact structure:
+
+1. Release header with compare URL using `compare/tag/vX.Y.Z`:
+
+```md
+## [X.Y.Z](https://github.com/homebridge-plugins/homebridge-updater/compare/tag/vX.Y.Z) (YYYY-MM-DD)
+```
+
+2. Standard sections as needed (`### Bug Fixes`, `### Enhancements`, `### Documentation`, etc.).
+
+3. End each release entry with a full changelog comparison URL to the previous version:
+
+```md
+**Full Changelog**: https://github.com/homebridge-plugins/homebridge-updater/compare/vX.Y.(Z-1)...vX.Y.Z
+```
+
+Do not omit either URL line when creating a new release entry.
+
 ## Architecture and Structure
 
 ### Core Components
-- **Platform (`src/platform.ts`)**: Main platform class implementing `DynamicPlatformPlugin`
+- **HAP Platform (`src/Platform.HAP.ts`)**: Main platform class implementing `DynamicPlatformPlugin`
+- **Matter Platform (`src/Platform.Matter.ts`)**: Matter-specific extension with Matter accessory registration and state updates
+- **Platform Proxy (`src/utils.ts`)**: Runtime HAP/Matter selection and fallback behavior
 - **CloudflaredTunnel (`src/cloudflared-tunnel.ts`)**: Handles tunnel creation and management
 - **Settings (`src/settings.ts`)**: Configuration types and constants
 - **Index (`src/index.ts`)**: Plugin entry point and registration
@@ -15,8 +78,8 @@ This is a Homebridge plugin that enables users to create Cloudflared tunnels for
 ### Key Dependencies
 - `homebridge`: Core Homebridge API
 - `untun`: Tunnel management library
-- `cloudflared`: Cloudflare tunnel binary interface
-- `cloudflared-tunnel`: Cloudflare tunnel library
+- `command-exists`: Checks availability of the cloudflared binary in PATH
+- `@homebridge/plugin-ui-utils`: Homebridge UI server utilities
 
 ## Development Standards
 
@@ -84,7 +147,7 @@ This is a Homebridge plugin that enables users to create Cloudflared tunnels for
 ### Plugin Registration
 - Plugin name: `@homebridge-plugins/homebridge-cloudflared-tunnel`
 - Platform name: `CloudflaredTunnel`
-- Requires Homebridge ^1.9.0 || ^2.0.0
+- Requires Homebridge ^2.0.0
 
 ### Configuration Schema
 - Schema defined in `config.schema.json`
@@ -96,6 +159,8 @@ This is a Homebridge plugin that enables users to create Cloudflared tunnels for
 - Handles platform initialization and configuration
 - Manages tunnel lifecycle (start/stop/restart)
 - Provides logging and error handling
+- Registers tunnel status accessory in HAP mode
+- Registers Matter tunnel status endpoint in Matter mode and updates occupancy cluster state
 
 ## Cloudflare Integration
 
@@ -183,7 +248,7 @@ These labels determine:
 - GitHub Actions for build and test
 - Automated release drafting
 - Dependency security scanning
-- Multi-platform testing (Node 20, 22)
+- Multi-platform testing (Node 22, 24)
 - Beta releases trigger automatically on pushes to beta-* branches
 
 ## When Contributing
@@ -195,7 +260,7 @@ Before starting any work:
 3. **Create beta branch if needed**: Base it on `latest` branch for the target version
 
 ### Code Changes
-- Follow existing patterns in platform.ts
+- Follow existing patterns in `src/Platform.HAP.ts`, `src/Platform.Matter.ts`, and `src/utils.ts`
 - Update tests for new functionality
 - Ensure TypeScript strict compliance
 - Add JSDoc for public methods

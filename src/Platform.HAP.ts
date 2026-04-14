@@ -1,6 +1,6 @@
 /* Copyright(C) 2023-2024, donavanbecker (https://github.com/donavanbecker). All rights reserved.
  *
- * platform.ts: @homebridge-plugins/homebridge-cloudflared-tunnel.
+ * Platform.HAP.ts: @homebridge-plugins/homebridge-cloudflared-tunnel.
  */
 import type { API, DynamicPlatformPlugin, HAP, Logging, PlatformAccessory } from 'homebridge'
 import type { TunnelOptions } from 'untun'
@@ -13,6 +13,7 @@ import { argv } from 'node:process'
 import { startTunnel } from 'untun'
 
 import { CloudflaredTunnel } from './cloudflared-tunnel.js'
+import { PLATFORM_NAME, PLUGIN_NAME } from './settings.js'
 
 /**
  * HomebridgePlatform
@@ -25,6 +26,10 @@ export class CloudflaredTunnelPlatform implements DynamicPlatformPlugin {
   public readonly log: Logging
   protected readonly hap: HAP
   public config!: CloudflaredTunnelPlatformConfig
+  protected readonly tunnelAccessoryName = 'Cloudflared Tunnel Status'
+  protected readonly tunnelAccessoryUUID: string
+  protected tunnelAccessory: PlatformAccessory | undefined
+  protected tunnelRunning = false
 
   platformConfig!: CloudflaredTunnelPlatformConfig
   platformLogging!: CloudflaredTunnelPlatformConfig['logging']
@@ -43,6 +48,7 @@ export class CloudflaredTunnelPlatform implements DynamicPlatformPlugin {
     this.api = api
     this.hap = this.api.hap
     this.log = log
+    this.tunnelAccessoryUUID = this.hap.uuid.generate('cloudflared-tunnel-status')
     // only load if configured
     if (!config) {
       return
@@ -91,6 +97,9 @@ export class CloudflaredTunnelPlatform implements DynamicPlatformPlugin {
       log.debug('Executed didFinishLaunching callback')
       // run the method to discover / register your devices as accessories
       try {
+        await this.setupTunnelAccessory()
+        await this.postAccessorySetup()
+
         if (this.config.domain) {
           await this.existingTunnel()
         } else {
@@ -99,8 +108,90 @@ export class CloudflaredTunnelPlatform implements DynamicPlatformPlugin {
       } catch (e: any) {
         this.errorLog(`Failed to Start Tunnel, Error Message: ${JSON.stringify(e.message)}`)
         this.debugErrorLog(JSON.stringify(e))
+        await this.updateTunnelStatus(false, 'Tunnel failed to start')
       }
     })
+  }
+
+  protected async postAccessorySetup(): Promise<void> {
+    // Extension point for Matter platform registration.
+  }
+
+  protected shouldPublishHapTunnelAccessory(): boolean {
+    return true
+  }
+
+  protected unregisterTunnelAccessoryIfPresent(): void {
+    const existingAccessory = this.accessories.find(accessory => accessory.UUID === this.tunnelAccessoryUUID)
+    if (!existingAccessory) {
+      return
+    }
+
+    this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [existingAccessory])
+    this.accessories = this.accessories.filter(accessory => accessory.UUID !== this.tunnelAccessoryUUID)
+    this.tunnelAccessory = undefined
+  }
+
+  protected async setupTunnelAccessory(): Promise<void> {
+    if (!this.shouldPublishHapTunnelAccessory()) {
+      this.unregisterTunnelAccessoryIfPresent()
+      return
+    }
+
+    const existingAccessory = this.accessories.find(accessory => accessory.UUID === this.tunnelAccessoryUUID)
+    if (existingAccessory) {
+      this.tunnelAccessory = existingAccessory
+      this.configureTunnelAccessory(existingAccessory)
+      return
+    }
+
+    const accessory = new this.api.platformAccessory(this.tunnelAccessoryName, this.tunnelAccessoryUUID)
+    this.configureTunnelAccessory(accessory)
+    this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory])
+    this.accessories.push(accessory)
+    this.tunnelAccessory = accessory
+  }
+
+  protected configureTunnelAccessory(accessory: PlatformAccessory): void {
+    accessory
+      .getService(this.hap.Service.AccessoryInformation)!
+      .setCharacteristic(this.hap.Characteristic.Manufacturer, 'homebridge-plugins')
+      .setCharacteristic(this.hap.Characteristic.Model, 'Cloudflared Tunnel Status')
+      .setCharacteristic(this.hap.Characteristic.SerialNumber, 'cloudflared-tunnel-status')
+      .setCharacteristic(this.hap.Characteristic.Name, this.tunnelAccessoryName)
+
+    const statusService = accessory.getService(this.hap.Service.OccupancySensor)
+      ?? accessory.addService(this.hap.Service.OccupancySensor, this.tunnelAccessoryName, 'TunnelStatus')
+
+    statusService
+      .setCharacteristic(this.hap.Characteristic.Name, this.tunnelAccessoryName)
+      .setCharacteristic(
+        this.hap.Characteristic.OccupancyDetected,
+        this.tunnelRunning
+          ? this.hap.Characteristic.OccupancyDetected.OCCUPANCY_DETECTED
+          : this.hap.Characteristic.OccupancyDetected.OCCUPANCY_NOT_DETECTED,
+      )
+  }
+
+  protected async updateTunnelStatus(running: boolean, reason: string): Promise<void> {
+    this.tunnelRunning = running
+
+    if (this.tunnelAccessory) {
+      const statusService = this.tunnelAccessory.getService(this.hap.Service.OccupancySensor)
+      statusService?.updateCharacteristic(
+        this.hap.Characteristic.OccupancyDetected,
+        running
+          ? this.hap.Characteristic.OccupancyDetected.OCCUPANCY_DETECTED
+          : this.hap.Characteristic.OccupancyDetected.OCCUPANCY_NOT_DETECTED,
+      )
+    }
+
+    await this.onTunnelStatusChanged(running)
+    await this.debugLog(`Tunnel status updated: running=${running}, reason=${reason}`)
+  }
+
+  protected async onTunnelStatusChanged(_running: boolean): Promise<void> {
+    // Extension point for Matter cluster state updates.
   }
 
   /**
@@ -112,6 +203,11 @@ export class CloudflaredTunnelPlatform implements DynamicPlatformPlugin {
 
     // add the restored accessory to the accessories cache so we can track if it has already been registered
     this.accessories.push(accessory)
+
+    if (accessory.UUID === this.tunnelAccessoryUUID) {
+      this.tunnelAccessory = accessory
+      this.configureTunnelAccessory(accessory)
+    }
   }
 
   /**
@@ -141,6 +237,14 @@ export class CloudflaredTunnelPlatform implements DynamicPlatformPlugin {
   async existingTunnel() {
     const tunnel = new CloudflaredTunnel()
     tunnel.token = this.config.token
+    tunnel.onChange((running, message) => {
+      void this.debugLog(message)
+      void this.updateTunnelStatus(running, message)
+    })
+    tunnel.onError((message) => {
+      void this.warnLog(message)
+      void this.updateTunnelStatus(false, message)
+    })
     await this.infoLog(`Starting Tunnel with Domain: ${this.config.domain}`)
     tunnel.start()
   }
@@ -161,6 +265,9 @@ export class CloudflaredTunnelPlatform implements DynamicPlatformPlugin {
     if (autoTunnel) {
       const tunnelURL = await autoTunnel.getURL()
       await this.infoLog(`Tunnel URL: ${JSON.stringify(tunnelURL)}`)
+      await this.updateTunnelStatus(true, 'Tunnel started')
+    } else {
+      await this.updateTunnelStatus(false, 'Tunnel did not start')
     }
   }
 

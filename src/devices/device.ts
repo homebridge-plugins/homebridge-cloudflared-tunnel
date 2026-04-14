@@ -4,7 +4,7 @@
  */
 import type { API, CharacteristicValue, HAP, Logging, PlatformAccessory, Service } from 'homebridge'
 
-import type { CloudflaredTunnelPlatform } from '../platform.js'
+import type { CloudflaredTunnelPlatform } from '../Platform.HAP.js'
 import type { CloudflaredTunnelPlatformConfig, devicesConfig } from '../settings.js'
 
 export abstract class deviceBase {

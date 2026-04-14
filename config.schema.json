@@ -170,6 +170,13 @@
             ]
           }
         ]
+      },
+      "enableMatter": {
+        "type": "boolean",
+        "title": "Enable Matter",
+        "required": false,
+        "default": true,
+        "description": "Enable Matter mode for this plugin. In Matter mode, the plugin publishes only the Matter tunnel status accessory endpoint."
       }
     },
     "dependentRequired": {
@@ -217,6 +224,15 @@
       "expanded": false,
       "items": [
         "logging"
+      ]
+    },
+    {
+      "type": "fieldset",
+      "title": "Matter Settings",
+      "expandable": true,
+      "expanded": false,
+      "items": [
+        "enableMatter"
       ]
     }
   ]

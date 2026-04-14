@@ -1,6 +1,27 @@
-# Changelog
+## [2.1.0](https://github.com/homebridge-plugins/homebridge-cloudflared-tunnel/releases/tag/v2.1.0) (2026-05-04)
 
-All notable changes to this project will be documented in this file. This project uses [Semantic Versioning](https://semver.org/)
+### Enhancements
+- Add Homebridge v2 Matter platform support with runtime platform selection and resilient fallback to HAP when Matter is unavailable.
+- Add strict Matter-mode publishing for tunnel status accessory endpoint, while preserving HAP-mode tunnel status publishing.
+- Add tunnel lifecycle status propagation to accessory state updates (HAP occupancy and Matter occupancySensing state).
+- Rename platform source files to `src/Platform.HAP.ts` and `src/Platform.Matter.ts`.
+
+### Configuration
+- Simplify Matter configuration to a single `enableMatter` toggle.
+- Remove redundant `preferMatter` option from config schema, types, logic, and tests.
+
+### Dependencies
+- Remove unused dependencies and devDependencies.
+- Update toolchain and key packages, including Homebridge v2, TypeScript v6, Vitest v4, ESLint v10, and latest project lint/test tooling.
+
+### Tests
+- Add coverage for platform proxy fallback behavior and tunnel lifecycle callback wiring.
+- Add Vitest configuration to run source tests only and exclude `dist/` test duplication.
+
+### Documentation
+- Update README and Copilot instructions to match current plugin architecture and Matter/HAP behavior.
+
+**Full Changelog**: https://github.com/homebridge-plugins/homebridge-cloudflared-tunnel/compare/v2.0.4...v2.1.0
 
 ## [2.0.4](https://github.com/homebridge-plugins/homebridge-cloudflared-tunnel/releases/tag/v2.0.4) (2025-09-18)
 
