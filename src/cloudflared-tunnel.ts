@@ -63,6 +63,14 @@ class CloudflaredTunnel {
     }
   }
 
+  onChange(change: (running: boolean, msg: string, code?: number) => void): void {
+    this.change = change
+  }
+
+  onError(error: (msg: string) => void): void {
+    this.error = error
+  }
+
   start(): void {
     if (this.childProcess) {
       this.emitError('Already started')

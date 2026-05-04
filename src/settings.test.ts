@@ -28,6 +28,7 @@ describe('settings', () => {
       pushRate: 60,
       logging: 'info',
       platform: 'CloudflaredTunnel',
+      enableMatter: true,
     }
     expect(config.domain).toBe('example.com')
     expect(config.token).toBe('token')
@@ -41,6 +42,7 @@ describe('settings', () => {
     expect(config.updateRate).toBe(60)
     expect(config.pushRate).toBe(60)
     expect(config.logging).toBe('info')
+    expect(config.enableMatter).toBe(true)
   })
 
   it('should have correct devicesConfig interface', () => {
