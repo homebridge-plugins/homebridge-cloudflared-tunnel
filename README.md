@@ -4,10 +4,10 @@
 
 # Homebridge Cloudflared Tunnel
 
-<a href="https://www.npmjs.com/package/homebridge-cloudflared-tunnel"><img title="npm version" src="https://badgen.net/npm/v/homebridge-cloudflared-tunnel?icon=npm&label" ></a>
-<a href="https://www.npmjs.com/package/homebridge-cloudflared-tunnel"><img title="npm downloads" src="https://badgen.net/npm/dt/homebridge-cloudflared-tunnel?label=downloads" ></a>
-<a href="https://discord.gg/8fpZA4S"><img title="discord-cloudflared-tunnel" src="https://badgen.net/discord/online-members/8fpZA4S?icon=discord&label=discord" ></a>
-<a href="https://paypal.me/donavanbecker"><img title="donate" src="https://badgen.net/badge/donate/paypal/yellow" ></a>
+<a href="https://www.npmjs.com/package/homebridge-cloudflared-tunnel"><img alt="badge" title="npm version" src="https://badgen.net/npm/v/homebridge-cloudflared-tunnel?icon=npm&label" ></a>
+<a href="https://www.npmjs.com/package/homebridge-cloudflared-tunnel"><img alt="badge" title="npm downloads" src="https://badgen.net/npm/dt/homebridge-cloudflared-tunnel?label=downloads" ></a>
+<a href="https://discord.gg/8fpZA4S"><img alt="badge" title="discord-cloudflared-tunnel" src="https://badgen.net/discord/online-members/8fpZA4S?icon=discord&label=discord" ></a>
+<a href="https://paypal.me/donavanbecker"><img alt="badge" title="donate" src="https://badgen.net/badge/donate/paypal/yellow" ></a>
 
 <p>The Homebridge <a href="https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/">Cloudflared Tunnel</a>
 plugin allows you to run a Cloudflare-Tunnel for exposing your

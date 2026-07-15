@@ -122,7 +122,7 @@ class CloudflaredTunnel {
       this.emitChange('Stopped cloudflared', code ?? undefined)
     })
 
-    this.childProcess.on('error', (err: NodeJS.ErrnoException) => {
+    this.childProcess.on('error', (err: Error & { code?: string }) => {
       if (err.code === 'ENOENT') {
         this.emitError(`Cloudflared error: ${this.cloudflaredPath} is not found`)
       } else {

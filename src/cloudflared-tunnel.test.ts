@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest'
 
 import { CloudflaredTunnel } from './cloudflared-tunnel.js'
 
-describe('CloudflaredTunnel', () => {
+describe('cloudflaredTunnel', () => {
   it('should emit lifecycle change and error events to registered handlers', () => {
     const tunnel = new CloudflaredTunnel('cloudflared')
     const onChange = vi.fn()

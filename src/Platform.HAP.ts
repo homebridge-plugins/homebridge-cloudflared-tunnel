@@ -190,9 +190,9 @@ export class CloudflaredTunnelPlatform implements DynamicPlatformPlugin {
     await this.debugLog(`Tunnel status updated: running=${running}, reason=${reason}`)
   }
 
-  protected async onTunnelStatusChanged(_running: boolean): Promise<void> {
-    // Extension point for Matter cluster state updates.
-  }
+  // Extension point for Matter cluster state updates (parameter used by subclasses).
+  // eslint-disable-next-line unused-imports/no-unused-vars
+  protected async onTunnelStatusChanged(_running: boolean): Promise<void> {}
 
   /**
    * This function is invoked when homebridge restores cached accessories from disk at startup.

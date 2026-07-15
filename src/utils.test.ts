@@ -29,7 +29,7 @@ describe('createPlatformProxy', () => {
     const MatterPlatform = vi.fn()
     const ProxyCtor = createPlatformProxy(HAPPlatform as any, MatterPlatform as any)
 
-    new ProxyCtor(makeLog(), makeConfig(), makeApi(false, false))
+    void new ProxyCtor(makeLog(), makeConfig(), makeApi(false, false))
 
     expect(HAPPlatform).toHaveBeenCalledOnce()
     expect(MatterPlatform).not.toHaveBeenCalled()
@@ -40,7 +40,7 @@ describe('createPlatformProxy', () => {
     const MatterPlatform = vi.fn()
     const ProxyCtor = createPlatformProxy(HAPPlatform as any, MatterPlatform as any)
 
-    new ProxyCtor(makeLog(), makeConfig({ enableMatter: true }), makeApi(true, true))
+    void new ProxyCtor(makeLog(), makeConfig({ enableMatter: true }), makeApi(true, true))
 
     expect(MatterPlatform).toHaveBeenCalledOnce()
     expect(HAPPlatform).not.toHaveBeenCalled()
@@ -52,7 +52,7 @@ describe('createPlatformProxy', () => {
     const ProxyCtor = createPlatformProxy(HAPPlatform as any, MatterPlatform as any)
 
     // No enableMatter in config → defaults to true
-    new ProxyCtor(makeLog(), makeConfig(), makeApi(true, true))
+    void new ProxyCtor(makeLog(), makeConfig(), makeApi(true, true))
 
     expect(MatterPlatform).toHaveBeenCalledOnce()
     expect(HAPPlatform).not.toHaveBeenCalled()
@@ -63,7 +63,7 @@ describe('createPlatformProxy', () => {
     const MatterPlatform = vi.fn()
     const ProxyCtor = createPlatformProxy(HAPPlatform as any, MatterPlatform as any)
 
-    new ProxyCtor(makeLog(), makeConfig({ enableMatter: false }), makeApi(true, true))
+    void new ProxyCtor(makeLog(), makeConfig({ enableMatter: false }), makeApi(true, true))
 
     expect(HAPPlatform).toHaveBeenCalledOnce()
     expect(MatterPlatform).not.toHaveBeenCalled()
@@ -74,7 +74,7 @@ describe('createPlatformProxy', () => {
     const MatterPlatform = vi.fn()
     const ProxyCtor = createPlatformProxy(HAPPlatform as any, MatterPlatform as any)
 
-    new ProxyCtor(makeLog(), null as any, makeApi(true, true))
+    void new ProxyCtor(makeLog(), null as any, makeApi(true, true))
 
     expect(HAPPlatform).toHaveBeenCalledOnce()
     expect(MatterPlatform).not.toHaveBeenCalled()
@@ -85,7 +85,7 @@ describe('createPlatformProxy', () => {
     const MatterPlatform = vi.fn()
     const ProxyCtor = createPlatformProxy(HAPPlatform as any, MatterPlatform as any)
 
-    new ProxyCtor(makeLog(), makeConfig({ enableMatter: true }), makeApiWithoutMatterMethods())
+    void new ProxyCtor(makeLog(), makeConfig({ enableMatter: true }), makeApiWithoutMatterMethods())
 
     expect(HAPPlatform).toHaveBeenCalledOnce()
     expect(MatterPlatform).not.toHaveBeenCalled()
@@ -101,7 +101,7 @@ describe('createPlatformProxy', () => {
     }
     const ProxyCtor = createPlatformProxy(HAPPlatform as any, MatterPlatform as any)
 
-    new ProxyCtor(log, makeConfig({ enableMatter: true }), makeApi(true, true))
+    void new ProxyCtor(log, makeConfig({ enableMatter: true }), makeApi(true, true))
 
     expect(HAPPlatform).toHaveBeenCalledOnce()
     expect(log.error).toHaveBeenCalledWith(
