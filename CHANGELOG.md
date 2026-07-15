@@ -3,6 +3,7 @@
 ### Changed
 
 - chore(deps): update dependencies
+- chore: add .idea to .gitignore
 
 ## [2.1.0](https://github.com/homebridge-plugins/homebridge-cloudflared-tunnel/releases/tag/v2.1.0) (2026-05-04)
 
