@@ -1,40 +1,55 @@
+<p align="center">
+   <a href="https://github.com/homebridge-plugins/homebridge-cloudflared-tunnel"><img alt="homebridge-cloudflared-tunnel" src="https://raw.githubusercontent.com/homebridge-plugins/homebridge-cloudflared-tunnel/latest/branding/Homebridge_x_CloudflaredTunnel.png" width="600px"></a>
+</p>
 <span align="center">
 
-<a href="https://github.com/homebridge/verified/blob/master/verified-plugins.json"><img alt="homebridge-verified" src="https://raw.githubusercontent.com/homebridge-plugins/homebridge-cloudflared-tunnel/latest/branding/Homebridge_x_CloudflaredTunnel.svg?sanitize=true" width="350px"></a>
+## homebridge-cloudflared-tunnel
 
-# Homebridge Cloudflared Tunnel
+Homebridge plugin to expose your Homebridge instance for remote access via a Cloudflare Tunnel
 
-<a href="https://www.npmjs.com/package/homebridge-cloudflared-tunnel"><img alt="badge" title="npm version" src="https://badgen.net/npm/v/homebridge-cloudflared-tunnel?icon=npm&label" ></a>
-<a href="https://www.npmjs.com/package/homebridge-cloudflared-tunnel"><img alt="badge" title="npm downloads" src="https://badgen.net/npm/dt/homebridge-cloudflared-tunnel?label=downloads" ></a>
-<a href="https://discord.gg/8fpZA4S"><img alt="badge" title="discord-cloudflared-tunnel" src="https://badgen.net/discord/online-members/8fpZA4S?icon=discord&label=discord" ></a>
-<a href="https://paypal.me/donavanbecker"><img alt="badge" title="donate" src="https://badgen.net/badge/donate/paypal/yellow" ></a>
-
-<p>The Homebridge <a href="https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/">Cloudflared Tunnel</a>
-plugin allows you to run a Cloudflare-Tunnel for exposing your
-  <a href="https://homebridge.io">Homebridge</a> instance for remote access.
-</p>
+[![npm](https://img.shields.io/npm/v/@homebridge-plugins/homebridge-cloudflared-tunnel/latest?label=latest)](https://www.npmjs.com/package/@homebridge-plugins/homebridge-cloudflared-tunnel)
+[![npm](https://img.shields.io/npm/v/@homebridge-plugins/homebridge-cloudflared-tunnel/beta?label=beta)](https://github.com/homebridge/homebridge/wiki/How-to-Install-Alternate-Plugin-Versions)<br>
+[![verified-by-homebridge](https://img.shields.io/badge/homebridge-verified-blueviolet?color=%23491F59&style=flat)](https://github.com/homebridge/homebridge/wiki/Verified-Plugins)<br>
+[![npm](https://img.shields.io/npm/dt/@homebridge-plugins/homebridge-cloudflared-tunnel)](https://www.npmjs.com/package/@homebridge-plugins/homebridge-cloudflared-tunnel)
+[![Discord](https://img.shields.io/discord/432663330281226270?color=728ED5&logo=discord&label=hb-discord)](https://discord.gg/bHjKNkN)
 
 </span>
 
-## Installation
+### Plugin Information
 
-1. Search for "Cloudflared Tunnel" on the plugin screen of [Homebridge UI](https://github.com/homebridge/homebridge-config-ui-x).
-2. Click **Install**.
-3. Set Auto Start Tunnel Install in Plugin Configs.
-4. Restart the plugin and the Cloudflare URL will be displayed in logs.
+- This plugin runs a [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/) so you can access your Homebridge instance remotely. The plugin:
+  - starts and supervises a `cloudflared` tunnel process alongside Homebridge
+  - shows the tunnel status in HomeKit as a sensor accessory
+  - can use a free quick tunnel (random URL) or your own Cloudflare domain
 
-## Matter Support
+### Setup
 
-This plugin supports Homebridge v2 Matter runtime selection.
+- Installation
+  - Search for "Cloudflared Tunnel" on the plugin screen of the [Homebridge UI](https://github.com/homebridge/homebridge-config-ui-x) and click **Install**.
+- Configuration
+  1. Enable **Auto Start Tunnel** in the plugin settings.
+  2. Restart Homebridge - the tunnel URL will be displayed in the logs.
+  3. Optionally set your own domain, token, protocol, hostname and port in the plugin settings for a permanent tunnel.
 
-- When Matter is available and enabled in Homebridge, the plugin can run in Matter mode.
-- When Matter is unavailable, disabled, or initialization fails, the plugin automatically falls back to HAP mode.
-- Tunnel lifecycle behavior is identical in HAP and Matter modes.
-- In HAP mode, the plugin registers a tunnel status accessory as an Occupancy Sensor.
-- In Matter mode, the plugin registers a Matter Motion Sensor endpoint using the occupancySensing cluster and does not publish the HAP status accessory.
+### Features
 
-### Matter Settings
+- **Matter** support is available when running Homebridge v2.0+ with Matter enabled:
+  - `enableMatter: true` (the default) uses Matter mode when the Matter runtime is available; the tunnel status is published as a Matter motion sensor endpoint.
+  - `enableMatter: false` forces HAP mode; the tunnel status is published as a HomeKit occupancy sensor.
+  - Tunnel behaviour is identical in both modes, and the plugin falls back to HAP automatically if Matter is unavailable.
 
-- `enableMatter`: Enables Matter mode for this plugin (default: `true`).
-  - `true`: Use Matter mode when Matter runtime is available.
-  - `false`: Force HAP mode.
+### Help/About
+
+- [Support Request](https://github.com/homebridge-plugins/homebridge-cloudflared-tunnel/issues/new/choose)
+- [Changelog](https://github.com/homebridge-plugins/homebridge-cloudflared-tunnel/blob/latest/CHANGELOG.md)
+- [About Me](https://github.com/sponsors/bwp91)
+
+### Credits
+
+- To [@donavanbecker](https://github.com/donavanbecker): the original creator and maintainer of this plugin.
+- To the creators/contributors of [Homebridge](https://homebridge.io) who make this plugin possible.
+
+### Disclaimer
+
+- I am in no way affiliated with Cloudflare and this plugin is a personal project that I maintain in my free time.
+- Use this plugin entirely at your own risk - please see licence for more information.

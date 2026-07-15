@@ -4,6 +4,15 @@
 
 - chore(deps): update dependencies
 - chore: add .idea to .gitignore
+- chore(github): align workflows, funding and issue templates with the other org plugins
+- chore: align npm publishing files with the other org plugins
+- chore: standardise the eslint setup with the other org plugins
+- style: apply the standardised lint rules
+- chore: standardise the package scripts and publishing config
+- chore: update the plugin metadata for the new maintainer
+- docs: refresh the readme
+- docs: add claude and copilot instructions files
+- docs: use the standard org readme banner
 
 ## [2.1.0](https://github.com/homebridge-plugins/homebridge-cloudflared-tunnel/releases/tag/v2.1.0) (2026-05-04)
 
