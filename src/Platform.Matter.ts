@@ -15,6 +15,20 @@ import { PLATFORM_NAME, PLUGIN_NAME } from './settings.js'
  * Used when Homebridge v2.0 Matter support is available and enabled.
  */
 export class CloudflaredTunnelMatterPlatform extends CloudflaredTunnelPlatform {
+  /**
+   * Matter's BridgedDeviceBasicInformation.NodeLabel is constrained to 32 characters.
+   * Homebridge sets the nodeLabel from the accessory displayName, so longer names make
+   * the whole endpoint fail to register with "Behaviors have errors".
+   */
+  private clampMatterDisplayName(displayName: string): string {
+    if (displayName.length <= 32) {
+      return displayName
+    }
+    const clamped = displayName.slice(0, 32).trim()
+    this.log.debug(`Display name "${displayName}" exceeds Matter's 32 character limit, using "${clamped}"`)
+    return clamped
+  }
+
   private matterTunnelAccessoryRegistered = false
 
   constructor(
@@ -44,7 +58,7 @@ export class CloudflaredTunnelMatterPlatform extends CloudflaredTunnelPlatform {
 
     const matterAccessory: MatterAccessory = {
       UUID: this.tunnelAccessoryUUID,
-      displayName: this.tunnelAccessoryName,
+      displayName: this.clampMatterDisplayName(this.tunnelAccessoryName),
       deviceType: this.api.matter.deviceTypes.MotionSensor,
       serialNumber: 'cloudflared-tunnel-status',
       manufacturer: 'homebridge-plugins',

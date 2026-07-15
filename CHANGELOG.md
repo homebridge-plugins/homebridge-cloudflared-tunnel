@@ -13,6 +13,7 @@
 - docs: refresh the readme
 - docs: add claude and copilot instructions files
 - docs: use the standard org readme banner
+- fix: keep matter display names within the 32 character limit
 
 ## [2.1.0](https://github.com/homebridge-plugins/homebridge-cloudflared-tunnel/releases/tag/v2.1.0) (2026-05-04)
 
