@@ -4,7 +4,7 @@
   "singular": true,
   "customUi": true,
   "customUiPath": "./dist/homebridge-ui",
-  "headerDisplay": "<p align='center'><img width='250px' src='https://raw.githubusercontent.com/homebridge-plugins/homebridge-cloudflared-tunnel/latest/branding/Homebridge_x_CloudflaredTunnel.svg'></p>\n\n<p>The Homebridge Cloudflared Tunnel plugin allows you to run a Cloudflare-Tunnel for exposing your Homebridge instance for remote access.",
+  "headerDisplay": "<p align='center'><img width='250px' src='https://raw.githubusercontent.com/homebridge-plugins/homebridge-cloudflared-tunnel/latest/branding/Homebridge_x_CloudflaredTunnel.png'></p>\n\n<p>The Homebridge Cloudflared Tunnel plugin allows you to run a Cloudflare-Tunnel for exposing your Homebridge instance for remote access.",
   "footerDisplay": "Your CloudflaredTunnel has been created. Please raise any issues on our [project page](https://github.com/homebridge-plugins/homebridge-cloudflared-tunnel/issues).\n\nIf you would like to have other features, please open a [feature request](https://github.com/homebridge-plugins/homebridge-cloudflared-tunnel/issues/new/choose).",
   "schema": {
     "type": "object",
