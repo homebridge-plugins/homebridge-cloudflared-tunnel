@@ -1,3 +1,9 @@
+## v2.1.1 (Pending Release)
+
+### Changed
+
+- chore(deps): update dependencies
+
 ## [2.1.0](https://github.com/homebridge-plugins/homebridge-cloudflared-tunnel/releases/tag/v2.1.0) (2026-05-04)
 
 ### Enhancements
