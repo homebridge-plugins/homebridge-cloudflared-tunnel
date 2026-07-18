@@ -15,6 +15,7 @@
 - docs: use the standard org readme banner
 - fix: keep matter display names within the 32 character limit
 - chore(github): update the setup-node action to v7
+- chore(deps): dependency updates
 
 ## [2.1.0](https://github.com/homebridge-plugins/homebridge-cloudflared-tunnel/releases/tag/v2.1.0) (2026-05-04)
 
