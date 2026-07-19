@@ -22,14 +22,18 @@ Homebridge plugin to expose your Homebridge instance for remote access via a Clo
   - shows the tunnel status in HomeKit as a sensor accessory
   - can use a free quick tunnel (random URL) or your own Cloudflare domain
 
+### Prerequisites
+
+- To use this plugin, you will need to already have:
+  - [Node](https://nodejs.org): latest version of `v22` or `v24` - any other major version is not supported.
+  - [Homebridge](https://homebridge.io): `v2` - refer to link for more information and installation instructions.
+
 ### Setup
 
-- Installation
-  - Search for "Cloudflared Tunnel" on the plugin screen of the [Homebridge UI](https://github.com/homebridge/homebridge-config-ui-x) and click **Install**.
-- Configuration
-  1. Enable **Auto Start Tunnel** in the plugin settings.
-  2. Restart Homebridge - the tunnel URL will be displayed in the logs.
-  3. Optionally set your own domain, token, protocol, hostname and port in the plugin settings for a permanent tunnel.
+- [Installation](https://github.com/homebridge-plugins/homebridge-cloudflared-tunnel/wiki/Installation)
+- [Configuration](https://github.com/homebridge-plugins/homebridge-cloudflared-tunnel/wiki/Configuration)
+- [Beta Version](https://github.com/homebridge-plugins/homebridge-cloudflared-tunnel/wiki/Beta-Version)
+- [Node Version](https://github.com/homebridge-plugins/homebridge-cloudflared-tunnel/wiki/Node-Version)
 
 ### Features
 
@@ -40,6 +44,7 @@ Homebridge plugin to expose your Homebridge instance for remote access via a Clo
 
 ### Help/About
 
+- [Common Errors](https://github.com/homebridge-plugins/homebridge-cloudflared-tunnel/wiki/Common-Errors)
 - [Support Request](https://github.com/homebridge-plugins/homebridge-cloudflared-tunnel/issues/new/choose)
 - [Changelog](https://github.com/homebridge-plugins/homebridge-cloudflared-tunnel/blob/latest/CHANGELOG.md)
 - [About Me](https://github.com/sponsors/bwp91)
