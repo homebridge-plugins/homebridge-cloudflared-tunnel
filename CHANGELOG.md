@@ -1,3 +1,11 @@
+## v2.1.2 (2026-07-20)
+
+### Changed
+
+- fix(schema): give the logging levels clear, distinct names
+- chore(deps): update untun to 0.2.2, which drops its three transitive dependencies
+- chore(deps): dependency updates
+
 ## v2.1.1 (2026-07-18)
 
 ### Changed
