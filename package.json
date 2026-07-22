@@ -42,6 +42,7 @@
   },
   "keywords": [
     "homebridge-plugin",
+    "supports-matter",
     "homebridge-matter",
     "Cloudflare",
     "cloudflared",
