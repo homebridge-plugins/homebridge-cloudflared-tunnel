@@ -1,3 +1,24 @@
+<style>
+  .dark-mode {
+    background-color: #242424;
+    color: lightgrey;
+
+    .form-control {
+      background-color: #333333 !important;
+      border: none !important;
+      color: #eeeeee !important;
+    }
+
+    thead, tbody, tr {
+      border-style: hidden;
+    }
+
+    th {
+      color: #eeeeee !important;
+      font-weight: 500 !important;
+    }
+  }
+</style>
 <p class="text-center">
   <img
     src="https://raw.githubusercontent.com/homebridge-plugins/homebridge-cloudflared-tunnel/latest/branding/Homebridge_x_CloudflaredTunnel.svg"
@@ -11,7 +32,7 @@
 </div>
 <div id="menuWrapper" class="btn-group w-100 mb-0" role="group" aria-label="UI Menu" style="display: none">
   <button type="button" class="btn btn-primary" id="menuSettings">Settings</button>
-  <button type="button" class="btn btn-primary" id="menuDevices">Devices</button>
+  <button type="button" class="btn btn-primary" id="menuDevices">My Devices</button>
   <button type="button" class="btn btn-primary mr-0" id="menuHome">Support</button>
 </div>
 <div id="disabledBanner" class="alert alert-secondary mb-0 mt-3" role="alert" style="display: none">
@@ -51,37 +72,56 @@
 </div>
 <div id="pageSupport" class="mt-4" style="display: none">
   <p class="text-center lead">Thank you for using <strong>homebridge-cloudflared-tunnel</strong></p>
-  <p class="text-center">The links below will take you to our GitHub repository documentation</p>
+  <h5>Plugin Information</h5>
+<ul>
+  <li>This plugin runs a <a href="https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/" target="_blank">Cloudflare Tunnel</a> so you can access your Homebridge instance remotely. The plugin:</li>
+  <ul>
+    <li>starts and supervises a <code>cloudflared</code> tunnel process alongside Homebridge</li>
+    <li>shows the tunnel status in HomeKit as a sensor accessory</li>
+    <li>can use a free quick tunnel (random URL) or your own Cloudflare domain</li>
+  </ul>
+</ul>
+  <h5>Prerequisites</h5>
+<ul>
+  <li>To use this plugin, you will need to already have:</li>
+  <ul>
+    <li><a href="https://nodejs.org" target="_blank">Node</a>: latest version of <code>v22</code> or <code>v24</code> - any other major version is not supported.</li>
+    <li><a href="https://homebridge.io" target="_blank">Homebridge</a>: <code>v2</code> - refer to link for more information and installation instructions.</li>
+  </ul>
+</ul>
   <h5>Setup</h5>
+<ul>
+  <li><a href="https://github.com/homebridge-plugins/homebridge-cloudflared-tunnel/wiki/Installation" target="_blank">Installation</a></li>
+  <li><a href="https://github.com/homebridge-plugins/homebridge-cloudflared-tunnel/wiki/Configuration" target="_blank">Configuration</a></li>
+  <li><a href="https://github.com/homebridge-plugins/homebridge-cloudflared-tunnel/wiki/Beta-Version" target="_blank">Beta Version</a></li>
+  <li><a href="https://github.com/homebridge-plugins/homebridge-cloudflared-tunnel/wiki/Node-Version" target="_blank">Node Version</a></li>
+</ul>
+  <h5>Features</h5>
+<ul>
+  <li><strong>Matter</strong> support is available when running Homebridge v2.0+ with Matter enabled:</li>
   <ul>
-    <li>
-      <a href="https://github.com/homebridge-plugins/homebridge-cloudflared-tunnel/blob/latest/README.md" target="_blank">README</a>
-    </li>
-    <li>
-      <a href="https://github.com/homebridge-plugins/homebridge-cloudflared-tunnel/tree/latest/docs" target="_blank">Documentation</a>
-    </li>
+    <li><code>enableMatter: true</code> (the default) uses Matter mode when the Matter runtime is available; the tunnel status is published as a Matter motion sensor endpoint.</li>
+    <li><code>enableMatter: false</code> forces HAP mode; the tunnel status is published as a HomeKit occupancy sensor.</li>
+    <li>Tunnel behaviour is identical in both modes, and the plugin falls back to HAP automatically if Matter is unavailable.</li>
   </ul>
+</ul>
   <h5>Help/About</h5>
-  <ul>
-    <li>
-      <a href="https://github.com/homebridge-plugins/homebridge-cloudflared-tunnel/issues/new/choose"
-        target="_blank">Support
-        Request</a>
-    </li>
-    <li>
-      <a href="https://github.com/homebridge-plugins/homebridge-cloudflared-tunnel/blob/latest/CHANGELOG.md"
-        target="_blank">Changelog</a>
-    </li>
-    <li>
-      <a href="https://github.com/sponsors/donavanbecker" target="_blank">About Me</a>
-    </li>
-  </ul>
+<ul>
+  <li><a href="https://github.com/homebridge-plugins/homebridge-cloudflared-tunnel/wiki/Common-Errors" target="_blank">Common Errors</a></li>
+  <li><a href="https://github.com/homebridge-plugins/homebridge-cloudflared-tunnel/issues/new/choose" target="_blank">Support Request</a></li>
+  <li><a href="https://github.com/homebridge-plugins/homebridge-cloudflared-tunnel/blob/latest/CHANGELOG.md" target="_blank">Changelog</a></li>
+  <li><a href="https://github.com/sponsors/bwp91" target="_blank">About Me</a></li>
+</ul>
+  <h5>Credits</h5>
+<ul>
+  <li>To <a href="https://github.com/donavanbecker" target="_blank">@donavanbecker</a>: the original creator and maintainer of this plugin.</li>
+  <li>To the creators/contributors of <a href="https://homebridge.io" target="_blank">Homebridge</a> who make this plugin possible.</li>
+</ul>
   <h5>Disclaimer</h5>
-  <ul>
-    <li>I am in no way affiliated with Cloudflared and this plugin is a personal project that I maintain in my free
-      time.</li>
-    <li>Use this plugin entirely at your own risk - please see licence for more information.</li>
-  </ul>
+<ul>
+  <li>I am in no way affiliated with Cloudflare and this plugin is a personal project that I maintain in my free time.</li>
+  <li>Use this plugin entirely at your own risk - please see licence for more information.</li>
+</ul>
 </div>
 <script>
   (async () => {

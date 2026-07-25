@@ -1,3 +1,9 @@
+## v2.1.3 (Pending Release)
+
+### Changed
+
+- style(ui): standardise the custom ui layout and sync the support tab with the readme
+
 ## v2.1.2 (2026-07-20)
 
 ### Changed
