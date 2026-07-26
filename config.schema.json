@@ -12,20 +12,17 @@
       "name": {
         "type": "string",
         "title": "Name",
-        "default": "CloudflaredTunnel",
-        "required": true
+        "default": "CloudflaredTunnel"
       },
       "domain": {
         "type": "string",
         "title": "Domain",
-        "description": "The domain of the self specified tunnel.",
-        "required": false
+        "description": "The domain of the self specified tunnel."
       },
       "token": {
         "type": "string",
         "title": "Token",
         "description": "The token to use for the self specified tunnel.",
-        "required": false,
         "condition": {
           "functionBody": "return (!model.url || (!model.protocol && !model.hostname && !model.port));"
         }
@@ -33,7 +30,6 @@
       "acceptCloudflareNotice": {
         "type": "boolean",
         "title": "Auto Start Tunnel Install",
-        "required": true,
         "description": "Automatically start the Cloudflared Tunnel install process.",
         "condition": {
           "functionBody": "return (!model.token && !model.domain);"
@@ -44,7 +40,6 @@
         "title": "URL",
         "placeholder": "http://localhost:8581",
         "pattern": "^https?://",
-        "required": false,
         "condition": {
           "functionBody": "return ((!model.port && !model.hostname && !model.protocol) || (!model.domain && !model.token));"
         },
@@ -63,7 +58,6 @@
       "protocol": {
         "type": "string",
         "title": "Protocol",
-        "required": false,
         "default": "",
         "oneOf": [
           {
@@ -88,7 +82,6 @@
         "type": "string",
         "title": "hostname",
         "placeholder": "homebridge.local",
-        "required": false,
         "description": "The hostname to tunnel to. If you are using a URL, you do not need to specify the protocol, hostname, or port.",
         "validation": {
           "pattern": "^(?!\\s*$).+",
@@ -108,7 +101,6 @@
         "type": "number",
         "title": "Port",
         "placeholder": "8581",
-        "required": false,
         "description": "The port to tunnel to. If you are using a URL, you do not need to specify the protocol, hostname, or port.",
         "minimum": 1,
         "maximum": 65535,
@@ -129,7 +121,6 @@
       "verifyTLS": {
         "type": "boolean",
         "title": "Verify TLS",
-        "required": false,
         "default": false,
         "description": "Verify the TLS certificate of the origin server.",
         "condition": {
@@ -143,7 +134,6 @@
         "title": "Plugin Logging Level",
         "description": "None turns off all messages from this plugin. Standard shows normal activity, warnings and errors. Debug adds detailed messages, and is what to use when reporting a problem. Default behaves the same as Standard.",
         "type": "string",
-        "required": true,
         "default": "",
         "oneOf": [
           {
@@ -175,7 +165,6 @@
       "enableMatter": {
         "type": "boolean",
         "title": "Enable Matter",
-        "required": false,
         "default": true,
         "description": "Enable Matter mode for this plugin. In Matter mode, the plugin publishes only the Matter tunnel status accessory endpoint."
       }
@@ -199,7 +188,11 @@
         "protocol",
         "hostname"
       ]
-    }
+    },
+    "required": [
+      "name",
+      "logging"
+    ]
   },
   "layout": [
     {
