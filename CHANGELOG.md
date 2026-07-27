@@ -6,6 +6,7 @@
 - fix(schema): declare required fields the standard way so the homebridge ui stops reporting a config validation failure
 - chore: declare the supports-hap transport keyword for the homebridge ui
 - fix: mask credentials in debug logs so shared logs cannot leak them
+- chore(deps): dependency updates
 
 ## v2.1.2 (2026-07-20)
 
