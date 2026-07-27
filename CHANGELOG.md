@@ -2,11 +2,16 @@
 
 ### Changed
 
+- chore(github): allow the codeql scan to be started manually
+- chore(github): stop concurrent release runs racing for the same version
+- chore: add the supports-matter keyword
+- chore(github): use the shared homebridge action to deprecate past pre-releases
 - style(ui): standardise the custom ui layout and sync the support tab with the readme
 - fix(schema): declare required fields the standard way so the homebridge ui stops reporting a config validation failure
 - chore: declare the supports-hap transport keyword for the homebridge ui
 - fix: mask credentials in debug logs so shared logs cannot leak them
 - chore(deps): dependency updates
+- docs(changelog): list every unreleased commit in the pending section
 
 ## v2.1.2 (2026-07-20)
 
