@@ -13,6 +13,7 @@ import { argv } from 'node:process'
 import { startTunnel } from 'untun'
 
 import { CloudflaredTunnel } from './cloudflared-tunnel.js'
+import { redactConfig } from './redact.js'
 import { PLATFORM_NAME, PLUGIN_NAME } from './settings.js'
 
 /**
@@ -250,7 +251,7 @@ export class CloudflaredTunnelPlatform implements DynamicPlatformPlugin {
   }
 
   async createTunnel() {
-    await this.debugLog(JSON.stringify(this.config))
+    await this.debugLog(JSON.stringify(redactConfig(this.config)))
     // The local server URL to tunnel.
     const options: TunnelOptions = {
       url: this.config.url,
