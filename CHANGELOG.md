@@ -10,6 +10,7 @@
 - chore(github): check the changelog against the commits in ci
 - chore: restore the original author and remove personal funding links
 - docs: add node 26 to the supported node versions
+- chore: allow dependency install scripts by package name rather than pinned version, so a version bump cannot silently block a native build
 
 ## v2.1.3 (2026-07-27)
 
