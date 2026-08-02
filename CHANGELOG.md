@@ -9,6 +9,7 @@
 - chore: count a repeated commit subject once when syncing the changelog
 - chore(github): check the changelog against the commits in ci
 - chore: restore the original author and remove personal funding links
+- docs: add node 26 to the supported node versions
 
 ## v2.1.3 (2026-07-27)
 
