@@ -5,8 +5,8 @@
   "version": "2.1.3",
   "description": "The Cloudflared Tunnel plugin allows you to run a Cloudflare-Tunnel for exposing your homebridge instance for remote access.",
   "author": {
-    "name": "bwp91",
-    "email": "bwp91@icloud.com"
+    "name": "donavanbecker",
+    "url": "https://github.com/donavanbecker"
   },
   "contributors": [
     {
@@ -18,20 +18,6 @@
     "donavanbecker"
   ],
   "license": "ISC",
-  "funding": [
-    {
-      "type": "github",
-      "url": "https://github.com/sponsors/bwp91"
-    },
-    {
-      "type": "kofi",
-      "url": "https://ko-fi.com/bwp91"
-    },
-    {
-      "type": "paypal",
-      "url": "https://www.paypal.me/BenPotter"
-    }
-  ],
   "homepage": "https://github.com/homebridge-plugins/homebridge-cloudflared-tunnel",
   "repository": {
     "type": "git",

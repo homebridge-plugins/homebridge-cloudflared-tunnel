@@ -47,7 +47,6 @@ Homebridge plugin to expose your Homebridge instance for remote access via a Clo
 - [Common Errors](https://github.com/homebridge-plugins/homebridge-cloudflared-tunnel/wiki/Common-Errors)
 - [Support Request](https://github.com/homebridge-plugins/homebridge-cloudflared-tunnel/issues/new/choose)
 - [Changelog](https://github.com/homebridge-plugins/homebridge-cloudflared-tunnel/blob/latest/CHANGELOG.md)
-- [About Me](https://github.com/sponsors/bwp91)
 
 ### Credits
 
