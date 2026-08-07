@@ -31,6 +31,9 @@ export class CloudflaredTunnelPlatform implements DynamicPlatformPlugin {
   protected tunnelAccessory: PlatformAccessory | undefined
   protected tunnelRunning = false
 
+  // The running cloudflared child, kept so it can be stopped on shutdown
+  protected tunnel: CloudflaredTunnel | undefined
+
   platformConfig!: CloudflaredTunnelPlatformConfig
   platformLogging!: CloudflaredTunnelPlatformConfig['logging']
   platformRefreshRate: CloudflaredTunnelPlatformConfig['refreshRate']
@@ -112,6 +115,15 @@ export class CloudflaredTunnelPlatform implements DynamicPlatformPlugin {
         this.debugErrorLog(JSON.stringify(e))
         await this.updateTunnelStatus(false, 'Tunnel failed to start')
       }
+    })
+
+    // The cloudflared child is not detached, but it is not killed with the parent
+    // on POSIX either. Without this, restarting the child bridge left the old
+    // cloudflared running with its connections open and started a second one
+    // alongside it, so repeated restarts piled them up.
+    this.api.on('shutdown', () => {
+      this.tunnel?.stop()
+      this.tunnel = undefined
     })
   }
 
@@ -238,6 +250,7 @@ export class CloudflaredTunnelPlatform implements DynamicPlatformPlugin {
 
   async existingTunnel() {
     const tunnel = new CloudflaredTunnel()
+    this.tunnel = tunnel
     tunnel.token = this.config.token
 
     // The configured origin used to be dropped here, so a hardcoded

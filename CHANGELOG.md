@@ -16,6 +16,7 @@
 - fix: read the plugin settings from where they are actually saved, so the logging level works
 - fix: stop reporting a healthy tunnel's normal output as an error
 - fix: use the configured local address on the token path, instead of a hardcoded one
+- fix: stop the cloudflared process on shutdown, so restarts do not leave one behind
 
 ## v2.1.3 (2026-07-27)
 
