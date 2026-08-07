@@ -15,6 +15,7 @@
 - fix: restore debug logging when the plugin runs in a child bridge
 - fix: read the plugin settings from where they are actually saved, so the logging level works
 - fix: stop reporting a healthy tunnel's normal output as an error
+- fix: use the configured local address on the token path, instead of a hardcoded one
 
 ## v2.1.3 (2026-07-27)
 

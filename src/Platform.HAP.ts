@@ -239,6 +239,12 @@ export class CloudflaredTunnelPlatform implements DynamicPlatformPlugin {
   async existingTunnel() {
     const tunnel = new CloudflaredTunnel()
     tunnel.token = this.config.token
+
+    // The configured origin used to be dropped here, so a hardcoded
+    // http://localhost:80 was passed to cloudflared whatever the owner had typed
+    // in, with nothing in the log to say so
+    tunnel.url = this.config.url
+    await this.debugLog(`Tunnelling to: ${tunnel.url}`)
     tunnel.onChange((running, message) => {
       void this.debugLog(message)
       void this.updateTunnelStatus(running, message)

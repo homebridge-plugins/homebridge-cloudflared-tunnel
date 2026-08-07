@@ -28,7 +28,7 @@ export function cloudflaredErrorLines(chunk: string): string[] {
 class CloudflaredTunnel {
   private cloudflaredPath: string
   private _token: string | undefined
-  private url: string
+  private _url: string
   private hostname: string
   private running: boolean
   private childProcess: childProcess.ChildProcess | null
@@ -37,7 +37,7 @@ class CloudflaredTunnel {
 
   constructor(cloudflaredPath: string = 'cloudflared') {
     this.cloudflaredPath = cloudflaredPath
-    this.url = 'http://localhost:80'
+    this._url = 'http://localhost:80'
     this.hostname = ''
     this.running = false
     this.childProcess = null
@@ -45,6 +45,21 @@ class CloudflaredTunnel {
 
   get token(): string | undefined {
     return this._token
+  }
+
+  get url(): string {
+    return this._url
+  }
+
+  /**
+   * The local origin the tunnel points at. Left alone it stays on the
+   * long-standing default of http://localhost:80, which is what every existing
+   * install has been running with.
+   */
+  set url(url: string | undefined) {
+    if (url && typeof url === 'string' && url.trim() !== '') {
+      this._url = url.trim()
+    }
   }
 
   set token(token: string | undefined) {
