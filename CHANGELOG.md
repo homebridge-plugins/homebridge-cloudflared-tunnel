@@ -17,6 +17,7 @@
 - fix: stop reporting a healthy tunnel's normal output as an error
 - fix: use the configured local address on the token path, instead of a hardcoded one
 - fix: stop the cloudflared process on shutdown, so restarts do not leave one behind
+- fix: keep the homekit tile when matter is enabled but the matter api is missing
 
 ## v2.1.3 (2026-07-27)
 

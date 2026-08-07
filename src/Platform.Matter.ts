@@ -45,7 +45,13 @@ export class CloudflaredTunnelMatterPlatform extends CloudflaredTunnelPlatform {
   }
 
   protected override shouldPublishHapTunnelAccessory(): boolean {
-    return false
+    // Matter mode replaces the HAP accessory - but only once the Matter API is
+    // known to be there. This used to return false outright, so on a build where
+    // Matter looks enabled but `api.matter` is not populated the cached HAP
+    // accessory was removed first and nothing replaced it. The owner lost the
+    // tile, its room and its automations, while the log claimed the plugin was
+    // "continuing with HAP accessory only".
+    return !this.api.matter
   }
 
   protected override async postAccessorySetup(): Promise<void> {
