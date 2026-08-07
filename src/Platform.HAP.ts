@@ -65,6 +65,9 @@ export class CloudflaredTunnelPlatform implements DynamicPlatformPlugin {
       protocol: config.protocol as 'http' | 'https' | undefined,
       verifyTLS: config.verifyTLS as boolean,
       logging: config.logging as string,
+      refreshRate: config.refreshRate as number,
+      updateRate: config.updateRate as number,
+      pushRate: config.pushRate as number,
       acceptCloudflareNotice: config.acceptCloudflareNotice as boolean,
     }
 
@@ -280,43 +283,46 @@ export class CloudflaredTunnelPlatform implements DynamicPlatformPlugin {
     // Nothing needs deciding: 'debugMode' routes debug lines to Homebridge's
     // own debug logger, which prints them only when debug is actually on, in
     // either kind of process. An explicit `logging` in the config still wins.
-    this.platformLogging = (this.config.options?.logging === 'debug' || this.config.options?.logging === 'standard'
-      || this.config.options?.logging === 'none')
-      ? this.config.options.logging
+    //
+    // These settings live at the top level of the config, which is where the
+    // settings UI writes them. They used to be read from `config.options`, a key
+    // this plugin never creates - so every one of them was silently ignored and
+    // the logging level the owner chose did nothing at all.
+    this.platformLogging = (this.config.logging === 'debug' || this.config.logging === 'standard'
+      || this.config.logging === 'none')
+      ? this.config.logging
       : 'debugMode'
-    const logging = this.config.options?.logging ? 'Platform Config' : 'Default'
+    const logging = this.config.logging ? 'Platform Config' : 'Default'
     await this.debugLog(`Using ${logging} Logging: ${this.platformLogging}`)
   }
 
   async getPlatformRateSettings() {
     // RefreshRate
-    this.platformRefreshRate = this.config.options?.refreshRate ? this.config.options.refreshRate : undefined
-    const refreshRate = this.config.options?.refreshRate ? 'Using Platform Config refreshRate' : 'Platform Config refreshRate Not Set'
+    this.platformRefreshRate = this.config.refreshRate ? this.config.refreshRate : undefined
+    const refreshRate = this.config.refreshRate ? 'Using Platform Config refreshRate' : 'Platform Config refreshRate Not Set'
     await this.debugLog(`${refreshRate}: ${this.platformRefreshRate}`)
     // UpdateRate
-    this.platformUpdateRate = this.config.options?.updateRate ? this.config.options.updateRate : undefined
-    const updateRate = this.config.options?.updateRate ? 'Using Platform Config updateRate' : 'Platform Config updateRate Not Set'
+    this.platformUpdateRate = this.config.updateRate ? this.config.updateRate : undefined
+    const updateRate = this.config.updateRate ? 'Using Platform Config updateRate' : 'Platform Config updateRate Not Set'
     await this.debugLog(`${updateRate}: ${this.platformUpdateRate}`)
     // PushRate
-    this.platformPushRate = this.config.options?.pushRate ? this.config.options.pushRate : undefined
-    const pushRate = this.config.options?.pushRate ? 'Using Platform Config pushRate' : 'Platform Config pushRate Not Set'
+    this.platformPushRate = this.config.pushRate ? this.config.pushRate : undefined
+    const pushRate = this.config.pushRate ? 'Using Platform Config pushRate' : 'Platform Config pushRate Not Set'
     await this.debugLog(`${pushRate}: ${this.platformPushRate}`)
   }
 
   async getPlatformConfigSettings() {
-    if (this.config.options) {
-      const platformConfig: CloudflaredTunnelPlatformConfig = {
-        platform: 'CloudflaredTunnel',
-      }
-      platformConfig.logging = this.config.options.logging ? this.config.options.logging : undefined
-      platformConfig.refreshRate = this.config.options.refreshRate ? this.config.options.refreshRate : undefined
-      platformConfig.updateRate = this.config.options.updateRate ? this.config.options.updateRate : undefined
-      platformConfig.pushRate = this.config.options.pushRate ? this.config.options.pushRate : undefined
-      if (Object.entries(platformConfig).length !== 0) {
-        await this.debugLog(`Platform Config: ${JSON.stringify(platformConfig)}`)
-      }
-      this.platformConfig = platformConfig
+    const platformConfig: CloudflaredTunnelPlatformConfig = {
+      platform: 'CloudflaredTunnel',
     }
+    platformConfig.logging = this.config.logging ? this.config.logging : undefined
+    platformConfig.refreshRate = this.config.refreshRate ? this.config.refreshRate : undefined
+    platformConfig.updateRate = this.config.updateRate ? this.config.updateRate : undefined
+    platformConfig.pushRate = this.config.pushRate ? this.config.pushRate : undefined
+    if (Object.entries(platformConfig).length !== 0) {
+      await this.debugLog(`Platform Config: ${JSON.stringify(platformConfig)}`)
+    }
+    this.platformConfig = platformConfig
   }
 
   /**
