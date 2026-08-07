@@ -14,6 +14,7 @@
 - chore: exclude test files and the test config from the published package
 - fix: restore debug logging when the plugin runs in a child bridge
 - fix: read the plugin settings from where they are actually saved, so the logging level works
+- fix: stop reporting a healthy tunnel's normal output as an error
 
 ## v2.1.3 (2026-07-27)
 

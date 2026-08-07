@@ -7,6 +7,24 @@ import * as process from 'node:process'
 
 import { sync as commandExistsSync } from 'command-exists'
 
+/**
+ * cloudflared tags each log line with a level: DBG, INF, WRN, ERR or FTL. Only
+ * the last two mean something has actually gone wrong.
+ */
+const CLOUDFLARED_ERROR_LEVEL = /\b(?:ERR|FTL)\b/
+
+/**
+ * Pick out the lines in a chunk of cloudflared's stderr that report a real
+ * problem. Everything cloudflared writes goes to stderr, so without this a
+ * healthy tunnel's routine connection notices read as failures.
+ */
+export function cloudflaredErrorLines(chunk: string): string[] {
+  return chunk
+    .split('\n')
+    .map(line => line.trim())
+    .filter(line => line !== '' && CLOUDFLARED_ERROR_LEVEL.test(line))
+}
+
 class CloudflaredTunnel {
   private cloudflaredPath: string
   private _token: string | undefined
@@ -132,7 +150,12 @@ class CloudflaredTunnel {
 
     if (this.childProcess && this.childProcess.stderr) {
       this.childProcess.stderr.on('data', (data: any) => {
-        this.emitError(data.toString())
+        // cloudflared writes all of its logging to stderr, including the routine
+        // INF lines a healthy tunnel produces. Treating every one of those as an
+        // error put a warning in the Homebridge log for each connection notice
+        // and flipped the status accessory to "not running" on a working tunnel.
+        // Only the lines cloudflared itself marks as a problem count.
+        cloudflaredErrorLines(data.toString()).forEach(line => this.emitError(line))
       })
     }
   }
