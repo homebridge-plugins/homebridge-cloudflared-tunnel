@@ -24,18 +24,12 @@ export interface CloudflaredTunnelPlatformConfig extends PlatformConfig {
   protocol?: TunnelOptions['protocol']
   verifyTLS?: TunnelOptions['verifyTLS']
   acceptCloudflareNotice?: TunnelOptions['acceptCloudflareNotice']
-  refreshRate?: number
-  updateRate?: number
-  pushRate?: number
   logging?: string
   enableMatter?: boolean
   allowInvalidCharacters?: boolean
 }
 
 export interface devicesConfig {
-  refreshRate: number
-  updateRate: number
-  pushRate: number
   logging: string
   firmware: string
 }
