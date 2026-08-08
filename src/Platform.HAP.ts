@@ -112,7 +112,6 @@ export class CloudflaredTunnelPlatform implements DynamicPlatformPlugin {
         }
       } catch (e: any) {
         this.errorLog(`Failed to Start Tunnel, Error Message: ${JSON.stringify(e.message)}`)
-        this.debugErrorLog(JSON.stringify(e))
         await this.updateTunnelStatus(false, 'Tunnel failed to start')
       }
     })
