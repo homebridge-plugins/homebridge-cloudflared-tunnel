@@ -167,6 +167,12 @@
         "title": "Enable Matter",
         "default": true,
         "description": "Enable Matter mode for this plugin. In Matter mode, the plugin publishes only the Matter tunnel status accessory endpoint."
+      },
+      "allowInvalidCharacters": {
+        "title": "Allow Invalid Characters",
+        "type": "boolean",
+        "default": false,
+        "description": "Keep accessory names exactly as they are set. Without this, characters HomeKit does not accept are stripped out and the change is reported in the log."
       }
     },
     "dependentRequired": {
@@ -217,7 +223,8 @@
       "expandable": true,
       "expanded": false,
       "items": [
-        "logging"
+        "logging",
+        "allowInvalidCharacters"
       ]
     },
     {

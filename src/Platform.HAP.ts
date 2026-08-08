@@ -72,6 +72,7 @@ export class CloudflaredTunnelPlatform implements DynamicPlatformPlugin {
       updateRate: config.updateRate as number,
       pushRate: config.pushRate as number,
       acceptCloudflareNotice: config.acceptCloudflareNotice as boolean,
+      allowInvalidCharacters: config.allowInvalidCharacters as boolean,
     }
 
     // Plugin Configuration
@@ -366,7 +367,11 @@ export class CloudflaredTunnelPlatform implements DynamicPlatformPlugin {
    * @returns The cleaned string value.
    */
   async validateAndCleanDisplayName(displayName: string, name: string, value: string): Promise<string> {
-    if (this.config.options?.allowInvalidCharacters) {
+    // This read used to be this.config.options?.allowInvalidCharacters. This
+    // plugin's config is flat - the object built in the constructor has no
+    // options key at all - so the check was always undefined and names were
+    // always stripped, whatever the owner set.
+    if (this.config.allowInvalidCharacters) {
       return value
     } else {
       const validPattern = /^[\p{L}\p{N}][\p{L}\p{N} ']*[\p{L}\p{N}]$/u

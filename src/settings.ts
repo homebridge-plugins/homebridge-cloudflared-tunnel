@@ -29,6 +29,7 @@ export interface CloudflaredTunnelPlatformConfig extends PlatformConfig {
   pushRate?: number
   logging?: string
   enableMatter?: boolean
+  allowInvalidCharacters?: boolean
 }
 
 export interface devicesConfig {

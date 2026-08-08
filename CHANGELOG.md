@@ -19,6 +19,7 @@
 - fix: stop the cloudflared process on shutdown, so restarts do not leave one behind
 - fix: keep the homekit tile when matter is enabled but the matter api is missing
 - fix: log the error message rather than the whole error object, which can carry the api response
+- fix: read the allow invalid characters setting from where it is actually saved, so it takes effect
 
 ## v2.1.3 (2026-07-27)
 
