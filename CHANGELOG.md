@@ -21,6 +21,7 @@
 - fix: log the error message rather than the whole error object, which can carry the api response
 - fix: read the allow invalid characters setting from where it is actually saved, so it takes effect
 - fix: stop confirming refreshRate, updateRate and pushRate in the log, when nothing reads them
+- chore(deps): dependency updates
 
 ## v2.1.3 (2026-07-27)
 
