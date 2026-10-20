@@ -175,3 +175,40 @@ describe('a default install, from the settings it actually works out', () => {
     expect(log.error).not.toHaveBeenCalled()
   })
 })
+
+/**
+ * The config UI now saves 'default' for the "Default" logging choice, because
+ * a required field that defaults to an empty string always failed the UI's
+ * validation. 'default' has to behave exactly as an empty or missing value
+ * always has: the plugin follows Homebridge's own debug setting.
+ */
+describe('the default logging choice', () => {
+  async function platformLoggingFor(config: Record<string, unknown>) {
+    const host: any = Object.create(CloudflaredTunnelPlatform.prototype)
+    host.log = makeLog()
+    host.config = config
+    await host.getPlatformLogSettings()
+    return host.platformLogging
+  }
+
+  it('resolves the plugin level the same as an empty or missing one', async () => {
+    const missing = await platformLoggingFor({})
+
+    expect(await platformLoggingFor({ logging: 'default' })).toBe(missing)
+    expect(await platformLoggingFor({ logging: '' })).toBe(missing)
+    expect(missing).toBe('debugMode')
+  })
+
+  it('leaves the same stored level after the config check as an empty one', async () => {
+    const storedAfterCheck = async (logging?: string) => {
+      const host: any = Object.create(CloudflaredTunnelPlatform.prototype)
+      host.log = makeLog()
+      host.config = { url: 'http://localhost:8581', logging }
+      await host.verifyConfig()
+      return host.config.logging
+    }
+
+    expect(await storedAfterCheck('default')).toBe(await storedAfterCheck(''))
+    expect(await storedAfterCheck('default')).toBe(await storedAfterCheck(undefined))
+  })
+})
