@@ -233,7 +233,7 @@ export class CloudflaredTunnelPlatform implements DynamicPlatformPlugin {
     if (this.config.token && !this.config.domain) {
       this.warnLog('Missing config: domain, this is is needed to display in the logs which domain is being tunneled, please check your config.json')
     }
-    if (!this.config.logging) {
+    if (!this.config.logging || this.config.logging === 'default') {
       this.config.logging = 'standard'
     }
     if (!this.config.acceptCloudflareNotice) {
@@ -304,7 +304,9 @@ export class CloudflaredTunnelPlatform implements DynamicPlatformPlugin {
       || this.config.logging === 'none')
       ? this.config.logging
       : 'debugMode'
-    const logging = this.config.logging ? 'Platform Config' : 'Default'
+    // 'default' (what the config UI saves) is not one of the three above, so it
+    // lands on 'debugMode' exactly as an empty or missing value does.
+    const logging = this.config.logging && this.config.logging !== 'default' ? 'Platform Config' : 'Default'
     await this.debugLog(`Using ${logging} Logging: ${this.platformLogging}`)
   }
 
@@ -312,7 +314,7 @@ export class CloudflaredTunnelPlatform implements DynamicPlatformPlugin {
     const platformConfig: CloudflaredTunnelPlatformConfig = {
       platform: 'CloudflaredTunnel',
     }
-    platformConfig.logging = this.config.logging ? this.config.logging : undefined
+    platformConfig.logging = this.config.logging && this.config.logging !== 'default' ? this.config.logging : undefined
     if (Object.entries(platformConfig).length !== 0) {
       await this.debugLog(`Platform Config: ${JSON.stringify(platformConfig)}`)
     }
