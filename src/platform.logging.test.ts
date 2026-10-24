@@ -117,7 +117,9 @@ describe('a default install, from the settings it actually works out', () => {
     const log = makeLog()
     const host: any = Object.create(CloudflaredTunnelPlatform.prototype)
     host.log = log
-    host.config = configLogging ? { logging: configLogging } : {}
+    host.config = configLogging
+      ? { logging: configLogging }
+      : {}
     return { host, log }
   }
 
