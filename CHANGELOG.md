@@ -4,6 +4,7 @@
 
 - ci: update github actions to their latest versions (#45)
 - fix(schema): give the default logging choice a value, so the ui stops flagging it as missing
+- chore: leave CLAUDE.md out of the published package
 
 ## v2.1.6 (2026-10-18)
 
