@@ -56,7 +56,9 @@ export function createPlatformProxy(HAPPlatform: PlatformConstructor, MatterPlat
           this.impl = new MatterPlatform(log, config, api)
           return
         } catch (error) {
-          const message = error instanceof Error ? error.message : String(error)
+          const message = error instanceof Error
+            ? error.message
+            : String(error)
           log.error('Matter platform failed to initialize, falling back to HAP platform.', message)
         }
       }

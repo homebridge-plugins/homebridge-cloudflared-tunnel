@@ -5,7 +5,13 @@ import { describe, expect, it, vi } from 'vitest'
 import { createPlatformProxy } from './utils.js'
 
 function makeLog(): Logging {
-  return { info: vi.fn(), warn: vi.fn(), error: vi.fn(), debug: vi.fn(), success: vi.fn() } as unknown as Logging
+  return {
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+    debug: vi.fn(),
+    success: vi.fn(),
+  } as unknown as Logging
 }
 
 function makeConfig(extra: Record<string, any> = {}): PlatformConfig {

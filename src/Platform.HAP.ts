@@ -306,7 +306,9 @@ export class CloudflaredTunnelPlatform implements DynamicPlatformPlugin {
       : 'debugMode'
     // 'default' (what the config UI saves) is not one of the three above, so it
     // lands on 'debugMode' exactly as an empty or missing value does.
-    const logging = this.config.logging && this.config.logging !== 'default' ? 'Platform Config' : 'Default'
+    const logging = this.config.logging && this.config.logging !== 'default'
+      ? 'Platform Config'
+      : 'Default'
     await this.debugLog(`Using ${logging} Logging: ${this.platformLogging}`)
   }
 
@@ -314,7 +316,9 @@ export class CloudflaredTunnelPlatform implements DynamicPlatformPlugin {
     const platformConfig: CloudflaredTunnelPlatformConfig = {
       platform: 'CloudflaredTunnel',
     }
-    platformConfig.logging = this.config.logging && this.config.logging !== 'default' ? this.config.logging : undefined
+    platformConfig.logging = this.config.logging && this.config.logging !== 'default'
+      ? this.config.logging
+      : undefined
     if (Object.entries(platformConfig).length !== 0) {
       await this.debugLog(`Platform Config: ${JSON.stringify(platformConfig)}`)
     }
